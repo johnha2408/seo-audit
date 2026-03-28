@@ -253,10 +253,34 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
     <input class="m-input" id="apiKeyInput" type="password" placeholder="sk-or-v1-..." />
     <div class="m-label">Model</div>
     <select class="m-select" id="modelSel">
-      <option value="anthropic/claude-sonnet-4-5">claude-sonnet-4-5 (recommended)</option>
-      <option value="anthropic/claude-haiku-4-5">claude-haiku-4-5 (fast)</option>
-      <option value="anthropic/claude-opus-4">claude-opus-4 (powerful)</option>
-      <option value="google/gemini-2.5-pro">gemini-2.5-pro</option>
+      <optgroup label="── Anthropic Claude ──">
+        <option value="anthropic/claude-sonnet-4-5">claude-sonnet-4-5 · Balanced ★</option>
+        <option value="anthropic/claude-haiku-4-5">claude-haiku-4-5 · Fast &amp; cheap</option>
+        <option value="anthropic/claude-opus-4">claude-opus-4 · Most powerful</option>
+        <option value="anthropic/claude-3-5-haiku">claude-3.5-haiku · Ultra fast</option>
+      </optgroup>
+      <optgroup label="── Google Gemini ──">
+        <option value="google/gemini-2.5-pro">gemini-2.5-pro · Best value</option>
+        <option value="google/gemini-2.5-flash">gemini-2.5-flash · Very fast</option>
+        <option value="google/gemini-2.0-flash-001">gemini-2.0-flash · Cheap</option>
+      </optgroup>
+      <optgroup label="── OpenAI ──">
+        <option value="openai/gpt-4o">gpt-4o · Capable</option>
+        <option value="openai/gpt-4o-mini">gpt-4o-mini · Fast &amp; cheap</option>
+        <option value="openai/o3-mini">o3-mini · Reasoning</option>
+      </optgroup>
+      <optgroup label="── Meta Llama ──">
+        <option value="meta-llama/llama-3.3-70b-instruct">llama-3.3-70b · Free tier</option>
+        <option value="meta-llama/llama-3.1-8b-instruct">llama-3.1-8b · Free &amp; fast</option>
+      </optgroup>
+      <optgroup label="── Mistral ──">
+        <option value="mistralai/mistral-small-3.1-24b-instruct">mistral-small-24b · Cheap</option>
+        <option value="mistralai/devstral-small">devstral-small · Coding</option>
+      </optgroup>
+      <optgroup label="── DeepSeek ──">
+        <option value="deepseek/deepseek-chat-v3-0324">deepseek-v3 · Very cheap</option>
+        <option value="deepseek/deepseek-r1">deepseek-r1 · Reasoning</option>
+      </optgroup>
     </select>
     <div class="m-row">
       <button class="btn btn-secondary btn-sm" onclick="closeModal()">Huỷ</button>
@@ -430,7 +454,8 @@ function updateBadge() {
   b.className = 'api-badge' + (apiKey ? ' ok' : '');
 }
 function updateModelChip() {
-  document.getElementById('modelChip').textContent = model.split('/')[1] || model;
+  const parts = model.split('/');
+  document.getElementById('modelChip').textContent = parts[parts.length-1] || model;
 }
 
 // =====================
