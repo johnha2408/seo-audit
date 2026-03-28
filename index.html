@@ -3,212 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SEO Lens — Site Audit Tool</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<title>SEO Lens</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #F5F4F0;
-  --surface: #FFFFFF;
-  --surface2: #EFEFEB;
-  --border: #E0DED8;
-  --border2: #C8C5BC;
-  --text: #1A1916;
-  --text2: #6B6860;
-  --text3: #9C9A94;
-  --accent: #1A1916;
-  --accent-light: #F0EFE9;
-  --green: #1A6B4A;
-  --green-bg: #E8F5EE;
-  --red: #B53A2F;
-  --red-bg: #FBEAEA;
-  --amber: #8B5A1A;
-  --amber-bg: #FEF3E0;
-  --blue: #1A4A8B;
-  --blue-bg: #E8EFFE;
-  --radius: 10px;
-  --radius-sm: 6px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-}
-[data-theme="dark"] {
-  --bg: #111110;
-  --surface: #1C1C1A;
-  --surface2: #242422;
-  --border: #2E2E2B;
-  --border2: #3E3E3A;
-  --text: #F0EFEB;
-  --text2: #8C8B85;
-  --text3: #5A5956;
-  --accent: #F0EFEB;
-  --accent-light: #242422;
-  --green: #4ABA7E;
-  --green-bg: #0D2318;
-  --red: #E06B60;
-  --red-bg: #2A1210;
-  --amber: #D4974A;
-  --amber-bg: #221608;
-  --blue: #6A9AE0;
-  --blue-bg: #0D1A2A;
-}
+:root{--bg:#F5F4F0;--surface:#FFF;--surface2:#EFEFEB;--border:#E0DED8;--border2:#C8C5BC;--text:#1A1916;--text2:#6B6860;--text3:#9C9A94;--green:#1A6B4A;--green-bg:#E8F5EE;--red:#B53A2F;--red-bg:#FBEAEA;--amber:#8B5A1A;--amber-bg:#FEF3E0;--blue:#1A4A8B;--blue-bg:#E8EFFE;--radius:10px;--radius-sm:6px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme="dark"]{--bg:#111110;--surface:#1C1C1A;--surface2:#242422;--border:#2E2E2B;--border2:#3E3E3A;--text:#F0EFEB;--text2:#8C8B85;--text3:#5A5956;--green:#4ABA7E;--green-bg:#0D2318;--red:#E06B60;--red-bg:#2A1210;--amber:#D4974A;--amber-bg:#221608;--blue:#6A9AE0;--blue-bg:#0D1A2A}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:16px}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background 0.25s,color 0.25s}
-/* LAYOUT */
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .2s,color .2s}
 .app{display:grid;grid-template-columns:220px 1fr;grid-template-rows:auto 1fr;min-height:100vh}
 .topbar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;background:var(--surface);border-bottom:1px solid var(--border)}
-.logo{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;letter-spacing:-0.3px;display:flex;align-items:center;gap:8px}
-.logo-icon{width:26px;height:26px;background:var(--text);border-radius:5px;display:flex;align-items:center;justify-content:center}
-.logo-icon svg{width:14px;height:14px;fill:var(--bg)}
-.topbar-right{display:flex;align-items:center;gap:12px}
-.theme-toggle{width:32px;height:32px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all 0.15s}
-.theme-toggle:hover{border-color:var(--border2)}
-.api-badge{font-family:'DM Mono',monospace;font-size:11px;padding:4px 10px;border-radius:99px;background:var(--green-bg);color:var(--green);border:1px solid var(--green);cursor:pointer}
-.api-badge.no-key{background:var(--red-bg);color:var(--red);border-color:var(--red)}
-/* SIDEBAR */
-.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:16px 12px;display:flex;flex-direction:column;gap:4px}
-.nav-section{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);padding:4px 8px;margin-top:8px;letter-spacing:0.08em;text-transform:uppercase}
-.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;font-size:13.5px;font-weight:400;color:var(--text2);transition:all 0.12s;border:1px solid transparent;text-decoration:none}
+.logo{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px}
+.logo-dot{width:22px;height:22px;background:var(--text);border-radius:4px;display:grid;place-items:center}
+.logo-dot svg{fill:var(--bg);width:12px;height:12px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.theme-btn{width:30px;height:30px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);cursor:pointer;display:grid;place-items:center;font-size:13px}
+.api-badge{font-family:'DM Mono',monospace;font-size:11px;padding:4px 10px;border-radius:99px;cursor:pointer;background:var(--red-bg);color:var(--red);border:1px solid var(--red)}
+.api-badge.ok{background:var(--green-bg);color:var(--green);border-color:var(--green)}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:14px 10px;display:flex;flex-direction:column;gap:3px}
+.nav-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);padding:3px 8px;margin-top:10px;letter-spacing:.07em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;color:var(--text2);transition:all .12s}
 .nav-item:hover{background:var(--surface2);color:var(--text)}
-.nav-item.active{background:var(--accent);color:var(--bg) !important;font-weight:500}
-.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:0.7}
+.nav-item.active{background:var(--text);color:var(--bg)}
+.nav-icon{width:15px;height:15px;flex-shrink:0;opacity:.7}
 .nav-item.active .nav-icon{opacity:1}
-.sidebar-footer{margin-top:auto;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
-/* MAIN */
-.main{overflow-y:auto;padding:28px;display:flex;flex-direction:column;gap:20px}
-/* CARDS */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
-.card-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;margin-bottom:4px}
-.card-sub{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.5}
-/* INPUT ROW */
-.input-row{display:flex;gap:10px;margin-bottom:14px}
-.url-input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-size:13.5px;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.15s}
+.sidebar-foot{margin-top:auto;padding-top:10px;border-top:1px solid var(--border);font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;padding-left:4px}
+.main{overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.card-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;margin-bottom:3px}
+.card-sub{font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5}
+.input-row{display:flex;gap:8px}
+.url-input{flex:1;padding:9px 13px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border .15s;width:100%}
 .url-input:focus{border-color:var(--border2);background:var(--surface)}
 .url-input::placeholder{color:var(--text3)}
-.btn{padding:10px 18px;border-radius:var(--radius-sm);border:none;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:7px;white-space:nowrap}
+.btn{padding:9px 16px;border-radius:var(--radius-sm);border:none;font-size:12.5px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:all .15s}
 .btn-primary{background:var(--text);color:var(--bg)}
-.btn-primary:hover{opacity:0.85}
-.btn-primary:disabled{opacity:0.4;cursor:not-allowed}
+.btn-primary:hover{opacity:.85}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
 .btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
-.btn-secondary:hover{border-color:var(--border2)}
-.btn-sm{padding:6px 12px;font-size:12px}
-/* RESULTS */
+.btn-sm{padding:5px 11px;font-size:11.5px}
 .result-area{display:none}
-.result-area.show{display:block}
-/* STATS ROW */
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:16px}
-.stat-box{background:var(--surface2);border-radius:var(--radius-sm);padding:12px 14px;border:1px solid var(--border)}
-.stat-num{font-family:'Syne',sans-serif;font-size:22px;font-weight:700}
-.stat-label{font-size:11px;color:var(--text2);margin-top:2px;font-family:'DM Mono',monospace}
+.result-area.show{display:contents}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:9px;margin-bottom:14px}
+.stat-box{background:var(--surface2);border-radius:var(--radius-sm);padding:11px 13px;border:1px solid var(--border)}
+.stat-num{font-family:'Syne',sans-serif;font-size:21px;font-weight:700}
+.stat-label{font-size:10px;color:var(--text2);margin-top:1px;font-family:'DM Mono',monospace}
 .stat-box.red .stat-num{color:var(--red)}
 .stat-box.green .stat-num{color:var(--green)}
 .stat-box.amber .stat-num{color:var(--amber)}
 .stat-box.blue .stat-num{color:var(--blue)}
-/* CLUSTER CARD */
-.cluster-list{display:flex;flex-direction:column;gap:10px}
-.cluster-card{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
-.cluster-header{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;background:var(--surface2);transition:background 0.1s;user-select:none}
-.cluster-header:hover{background:var(--border)}
-.cluster-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.cluster-name{font-family:'Syne',sans-serif;font-size:13.5px;font-weight:600;flex:1}
-.cluster-meta{display:flex;gap:6px;align-items:center}
-.pill{font-size:11px;padding:2px 8px;border-radius:99px;font-family:'DM Mono',monospace;font-weight:500}
+.cluster-list{display:flex;flex-direction:column;gap:8px}
+.c-card{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+.c-header{display:flex;align-items:center;gap:9px;padding:10px 13px;cursor:pointer;background:var(--surface2);user-select:none}
+.c-header:hover{background:var(--border)}
+.c-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.c-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;flex:1}
+.c-meta{display:flex;gap:5px;align-items:center}
+.pill{font-size:10px;padding:2px 7px;border-radius:99px;font-family:'DM Mono',monospace;font-weight:500;white-space:nowrap}
 .pill-green{background:var(--green-bg);color:var(--green)}
 .pill-red{background:var(--red-bg);color:var(--red)}
 .pill-amber{background:var(--amber-bg);color:var(--amber)}
 .pill-blue{background:var(--blue-bg);color:var(--blue)}
 .pill-gray{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
-.chevron{font-size:10px;color:var(--text3);transition:transform 0.2s;margin-left:4px}
+.chevron{font-size:9px;color:var(--text3);transition:transform .2s;margin-left:3px}
 .chevron.open{transform:rotate(90deg)}
-.cluster-body{display:none;padding:14px;border-top:1px solid var(--border)}
-.cluster-body.open{display:block}
-.body-section{margin-bottom:12px}
-.body-section:last-child{margin-bottom:0}
-.section-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:7px}
-.pillar-chip{display:inline-flex;align-items:center;gap:6px;background:var(--green-bg);border:1px solid var(--green);border-radius:var(--radius-sm);padding:5px 10px;font-family:'DM Mono',monospace;font-size:11.5px;color:var(--green)}
-.no-pillar-chip{background:var(--red-bg);border:1px solid var(--red);color:var(--red)}
-.article-list{display:flex;flex-direction:column;gap:6px}
-.article-row{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface)}
-.article-title{font-size:12.5px;color:var(--text);line-height:1.4;flex:1}
-.article-slug{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--text3);margin-top:2px}
-.article-wc{font-size:10px;color:var(--text3);white-space:nowrap;margin-top:2px}
-/* ONPAGE */
-.error-list{display:flex;flex-direction:column;gap:8px}
-.error-item{padding:11px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);display:flex;gap:12px;align-items:flex-start}
-.error-icon{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
-.err-high .error-icon{background:var(--red-bg);color:var(--red)}
-.err-med .error-icon{background:var(--amber-bg);color:var(--amber)}
-.err-low .error-icon{background:var(--blue-bg);color:var(--blue)}
-.err-ok .error-icon{background:var(--green-bg);color:var(--green)}
-.error-content{flex:1}
-.error-title{font-size:13px;font-weight:500;margin-bottom:3px}
-.error-desc{font-size:12px;color:var(--text2);line-height:1.5}
-.error-fix{font-size:11.5px;color:var(--blue);font-family:'DM Mono',monospace;margin-top:4px}
-/* INTERNAL LINK */
-.link-table{width:100%;border-collapse:collapse;font-size:12.5px}
-.link-table th{text-align:left;padding:8px 12px;background:var(--surface2);font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.05em;text-transform:uppercase;border-bottom:1px solid var(--border);font-weight:500}
-.link-table td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.4}
+.c-body{display:none;padding:12px 13px;border-top:1px solid var(--border)}
+.c-body.open{display:block}
+.sec-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;margin-top:10px}
+.sec-label:first-child{margin-top:0}
+.pillar-chip{display:inline-flex;align-items:center;gap:6px;border-radius:var(--radius-sm);padding:5px 10px;font-family:'DM Mono',monospace;font-size:11px}
+.pillar-chip.ok{background:var(--green-bg);border:1px solid var(--green);color:var(--green)}
+.pillar-chip.missing{background:var(--red-bg);border:1px solid var(--red);color:var(--red)}
+.a-list{display:flex;flex-direction:column;gap:5px}
+.a-row{display:flex;align-items:flex-start;gap:7px;padding:7px 9px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface)}
+.a-title{font-size:12px;color:var(--text);line-height:1.4;flex:1}
+.a-slug{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:1px}
+.a-wc{font-size:10px;color:var(--text3)}
+.d-section{background:var(--amber-bg);border:1px solid var(--amber);border-radius:var(--radius-sm);padding:8px 10px;margin-top:8px}
+.d-title{font-size:10px;font-weight:500;color:var(--amber);margin-bottom:5px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em}
+.d-row{font-size:11px;color:var(--text2);padding:3px 0;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace}
+.d-row:last-child{border-bottom:none}
+.error-list{display:flex;flex-direction:column;gap:7px}
+.error-item{padding:10px 13px;border-radius:var(--radius-sm);border:1px solid var(--border);display:flex;gap:10px}
+.e-icon{width:18px;height:18px;border-radius:3px;display:grid;place-items:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.err-high .e-icon{background:var(--red-bg);color:var(--red)}
+.err-med .e-icon{background:var(--amber-bg);color:var(--amber)}
+.err-low .e-icon{background:var(--blue-bg);color:var(--blue)}
+.err-ok .e-icon{background:var(--green-bg);color:var(--green)}
+.e-title{font-size:12.5px;font-weight:500;margin-bottom:2px}
+.e-desc{font-size:11.5px;color:var(--text2);line-height:1.5}
+.e-fix{font-size:11px;color:var(--blue);font-family:'DM Mono',monospace;margin-top:3px}
+.e-val{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--text3)}
+.link-table{width:100%;border-collapse:collapse;font-size:12px}
+.link-table th{text-align:left;padding:7px 11px;background:var(--surface2);font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border);font-weight:500}
+.link-table td{padding:8px 11px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.4}
 .link-table tr:last-child td{border-bottom:none}
 .link-table tr:hover td{background:var(--surface2)}
-.anchor-tag{display:inline-block;background:var(--blue-bg);color:var(--blue);border-radius:3px;padding:1px 6px;font-family:'DM Mono',monospace;font-size:11px;margin:2px 2px 2px 0}
-/* LOADING */
-.loading{display:flex;align-items:center;gap:10px;padding:20px;color:var(--text2);font-size:13px}
-.spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--text);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+.anchor-tag{display:inline-block;background:var(--blue-bg);color:var(--blue);border-radius:3px;padding:1px 6px;font-family:'DM Mono',monospace;font-size:10.5px;margin:1px}
+.loading{display:flex;align-items:center;gap:9px;padding:16px 0;color:var(--text2);font-size:13px}
+.spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--text);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-log{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);padding:8px 14px;background:var(--surface2);border-radius:var(--radius-sm);margin-top:8px;line-height:1.8;border:1px solid var(--border)}
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;display:flex;align-items:center;justify-content:center;display:none}
-.modal-overlay.show{display:flex}
-.modal{background:var(--surface);border-radius:var(--radius);padding:24px;width:420px;border:1px solid var(--border);box-shadow:var(--shadow-md)}
-.modal h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:600;margin-bottom:6px}
-.modal p{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.5}
-.modal-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-size:13px;font-family:'DM Mono',monospace;outline:none;margin-bottom:12px}
-.modal-input:focus{border-color:var(--border2)}
+.loading-log{font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);padding:8px 12px;background:var(--surface2);border-radius:var(--radius-sm);margin-top:6px;line-height:1.9;border:1px solid var(--border);max-height:120px;overflow-y:auto}
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:none;align-items:center;justify-content:center}
+.modal-ov.show{display:flex}
+.modal{background:var(--surface);border-radius:var(--radius);padding:22px;width:400px;border:1px solid var(--border)}
+.modal h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;margin-bottom:5px}
+.modal p{font-size:12px;color:var(--text2);margin-bottom:13px;line-height:1.5}
+.modal-input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-size:12.5px;font-family:'DM Mono',monospace;outline:none;margin-bottom:10px}
+.modal-select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-size:12px;font-family:'DM Mono',monospace;outline:none;margin-bottom:14px}
 .modal-row{display:flex;gap:8px;justify-content:flex-end}
-/* FILTER BAR */
-.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.filter-btn{font-size:12px;padding:5px 12px;border-radius:99px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-family:'DM Mono',monospace;transition:all 0.12s}
-.filter-btn.active{background:var(--text);color:var(--bg);border-color:var(--text)}
-/* TABS */
-.tabs{display:flex;border-bottom:1px solid var(--border);margin:-20px -20px 20px;padding:0 20px}
-.tab{padding:13px 16px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--text2);transition:all 0.12s;font-weight:400;margin-bottom:-1px}
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.f-btn{font-size:11px;padding:4px 11px;border-radius:99px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-family:'DM Mono',monospace;transition:all .12s}
+.f-btn.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+.tabs{display:flex;border-bottom:1px solid var(--border);margin:-18px -18px 16px;padding:0 18px}
+.tab{padding:12px 14px;font-size:12.5px;cursor:pointer;border-bottom:2px solid transparent;color:var(--text2);transition:all .12s;margin-bottom:-1px}
 .tab:hover{color:var(--text)}
 .tab.active{color:var(--text);border-bottom-color:var(--text);font-weight:500}
-/* EMPTY */
-.empty-state{text-align:center;padding:40px 20px;color:var(--text3)}
-.empty-icon{font-size:32px;margin-bottom:10px;opacity:0.4}
-.empty-text{font-size:13px}
-/* SCROLLBAR */
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-/* RESPONSIVE */
-@media(max-width:700px){.app{grid-template-columns:1fr}.sidebar{display:none}.topbar{padding:0 16px}.main{padding:16px}}
-/* EXPORT BTN */
-.export-row{display:flex;justify-content:flex-end;gap:8px;margin-bottom:14px}
-/* TAG */
-.tag-input-wrap{display:flex;gap:8px;align-items:center;margin-bottom:10px}
-.model-select{padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-size:12px;font-family:'DM Mono',monospace;outline:none}
+.mode-tabs{display:flex;gap:6px;margin-bottom:12px}
+.empty{text-align:center;padding:32px 20px;color:var(--text3);font-size:12px}
+textarea.url-input{font-family:'DM Mono',monospace;font-size:11.5px;resize:vertical;padding:10px}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 </style>
 </head>
 <body>
 
-<div class="modal-overlay" id="apiModal">
+<div class="modal-ov" id="apiModal">
   <div class="modal">
-    <h3>OpenRouter API Key</h3>
-    <p>Nhập API key để dùng AI phân tích. Key được lưu trong localStorage, không gửi đi đâu ngoài OpenRouter.</p>
+    <h3>API Configuration</h3>
+    <p>OpenRouter API key — lưu local, không gửi đi đâu ngoài openrouter.ai</p>
     <input class="modal-input" id="apiKeyInput" type="password" placeholder="sk-or-v1-..." />
-    <div style="margin-bottom:12px">
-      <select class="model-select" id="modelSelect" style="width:100%">
-        <option value="anthropic/claude-sonnet-4-5">claude-sonnet-4-5 (recommended)</option>
-        <option value="anthropic/claude-opus-4">claude-opus-4 (powerful)</option>
-        <option value="google/gemini-2.5-pro">gemini-2.5-pro (cheap)</option>
-        <option value="anthropic/claude-haiku-4-5">claude-haiku-4-5 (fast)</option>
-      </select>
-    </div>
+    <select class="modal-select" id="modelSelect">
+      <option value="anthropic/claude-sonnet-4-5">claude-sonnet-4-5 (recommended)</option>
+      <option value="anthropic/claude-opus-4">claude-opus-4 (powerful)</option>
+      <option value="anthropic/claude-haiku-4-5">claude-haiku-4-5 (fast)</option>
+      <option value="google/gemini-2.5-pro">gemini-2.5-pro</option>
+    </select>
     <div class="modal-row">
       <button class="btn btn-secondary btn-sm" onclick="closeModal()">Huỷ</button>
-      <button class="btn btn-primary btn-sm" onclick="saveApiKey()">Lưu</button>
+      <button class="btn btn-primary btn-sm" onclick="saveKey()">Lưu</button>
     </div>
   </div>
 </div>
@@ -216,73 +148,74 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <div class="app">
   <header class="topbar">
     <div class="logo">
-      <div class="logo-icon">
-        <svg viewBox="0 0 14 14"><path d="M2 2h4v4H2zM8 2h4v4H8zM2 8h4v4H2zM9 8l2 2-2 2M11 10H9"/></svg>
-      </div>
+      <div class="logo-dot"><svg viewBox="0 0 12 12"><rect x="1" y="1" width="4" height="4"/><rect x="7" y="1" width="4" height="4"/><rect x="1" y="7" width="4" height="4"/><path d="M7 9l3-2M10 9l-3-2" stroke="var(--bg)" stroke-width="1.2" fill="none"/></svg></div>
       SEO Lens
     </div>
     <div class="topbar-right">
-      <span class="api-badge no-key" id="apiBadge" onclick="openModal()">No API Key</span>
-      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" title="Toggle dark mode">☀</button>
+      <span class="api-badge" id="apiBadge" onclick="openModal()">No API Key</span>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">☀</button>
     </div>
   </header>
 
   <aside class="sidebar">
-    <div class="nav-section">Tools</div>
-    <a class="nav-item active" onclick="switchTab('sitemap')" data-tab="sitemap">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12v2H2zm0 4h8v2H2zm0 4h5v2H2z"/></svg>
-      Sitemap Fetch
-    </a>
-    <a class="nav-item" onclick="switchTab('onpage')" data-tab="onpage">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm-.5 2v4l3 1.5.5-.9-2.5-1.2V5z"/></svg>
-      Onpage Audit
-    </a>
-    <a class="nav-item" onclick="switchTab('internal')" data-tab="internal">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M9 3l4 4-4 4-1.4-1.4L10.2 7H3V5h7.2L7.6 4.4z"/><path d="M7 9l-4 4 4 4 1.4-1.4L5.8 13H13v-2H5.8l2.6-2.6z"/></svg>
-      Internal Links
-    </a>
-    <div class="nav-section" style="margin-top:16px">Settings</div>
-    <a class="nav-item" onclick="openModal()">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 5a3 3 0 100 6A3 3 0 008 5zm0 1.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/><path d="M8 1L6.5 3H5L3 5l1 1.5-.5 1.5L1 9v2l2.5.5.5 1.5L3 14l2 2 1.5-1 1.5.5L9 16h2l.5-2.5 1.5-.5L14 14l2-2-1-1.5.5-1.5L16 8V6l-2.5-.5L13 4l1-1.5-2-2-1.5 1L9 1z"/></svg>
-      API Config
-    </a>
-    <div class="sidebar-footer">
-      v1.0 · OpenRouter<br>
-      <span id="modelBadge" style="color:var(--text3)">claude-sonnet-4-5</span>
+    <div class="nav-label">Tools</div>
+    <div class="nav-item active" onclick="switchTab('sitemap')" data-tab="sitemap">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12v2H2zm0 4h8v2H2zm0 4h5v2H2z"/></svg>Sitemap Fetch
     </div>
+    <div class="nav-item" onclick="switchTab('onpage')" data-tab="onpage">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm-.5 2v4l3 1.5.5-.9-2.5-1.2V5z"/></svg>Onpage Audit
+    </div>
+    <div class="nav-item" onclick="switchTab('internal')" data-tab="internal">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M9 3l4 4-4 4-1.4-1.4L10.2 7H3V5h7.2L7.6 4.4zM7 9l-4 4 4 4 1.4-1.4L5.8 13H13v-2H5.8l2.6-2.6z"/></svg>Internal Links
+    </div>
+    <div class="nav-label" style="margin-top:14px">Config</div>
+    <div class="nav-item" onclick="openModal()">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 5a3 3 0 100 6A3 3 0 008 5zm0 1.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM8 1L6.5 3H5L3 5l1 1.5-.5 1.5L1 9v2l2.5.5.5 1.5L3 14l2 2 1.5-1 1.5.5L9 16h2l.5-2.5 1.5-.5L14 14l2-2-1-1.5.5-1.5L16 8V6l-2.5-.5L13 4l1-1.5-2-2-1.5 1L9 1z"/></svg>API Config
+    </div>
+    <div class="sidebar-foot" id="modelBadge">claude-sonnet-4-5</div>
   </aside>
 
-  <main class="main" id="mainContent">
+  <main class="main">
 
-    <!-- ====== SITEMAP TAB ====== -->
+    <!-- SITEMAP TAB -->
     <div id="tab-sitemap">
       <div class="card">
-        <div class="card-title">Sitemap Fetch & Cluster Analysis</div>
-        <div class="card-sub">Paste sitemap URL — AI sẽ phân tích và gom nhóm pillar/cluster tự động.</div>
-        <div class="input-row">
-          <input class="url-input" id="sitemapUrl" placeholder="https://example.com/sitemap.xml" />
-          <button class="btn btn-primary" id="sitemapBtn" onclick="runSitemap()">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor"><path d="M6.5 1a5.5 5.5 0 100 11A5.5 5.5 0 006.5 1zm0 1.5a4 4 0 110 8 4 4 0 010-8zm-.5 2v3.5l2.5 1.5.5-.9-2-1.2V4.5z"/></svg>
-            Fetch & Analyse
-          </button>
+        <div class="card-title">Sitemap Fetch &amp; Cluster Analysis</div>
+        <div class="card-sub">Paste sitemap URL hoặc danh sách URLs — AI tự phân nhóm pillar/cluster và đề xuất bài cần viết.</div>
+        <div class="mode-tabs">
+          <button class="f-btn active" id="modeUrlBtn" onclick="setMode('url')">Sitemap URL</button>
+          <button class="f-btn" id="modePasteBtn" onclick="setMode('paste')">Paste URL list</button>
+        </div>
+        <div id="modeUrl">
+          <div class="input-row">
+            <input class="url-input" id="sitemapUrl" placeholder="https://example.com/sitemap.xml" />
+            <button class="btn btn-primary" id="sitemapBtn" onclick="runSitemap()">Fetch &amp; Analyse</button>
+          </div>
+        </div>
+        <div id="modePaste" style="display:none">
+          <div style="font-size:11.5px;color:var(--text2);margin-bottom:8px;line-height:1.6">
+            Nếu proxy bị block: export URL từ <strong>Google Search Console</strong> → Coverage, hoặc dùng <strong>Screaming Frog</strong> → export CSV → copy cột URL → paste vào đây.
+          </div>
+          <textarea class="url-input" id="urlPaste" rows="7" placeholder="https://example.com/&#10;https://example.com/blog/post-1/&#10;https://example.com/services/service-a/&#10;..."></textarea>
+          <div style="display:flex;justify-content:flex-end;margin-top:8px">
+            <button class="btn btn-primary" onclick="runPaste()">Analyse URLs</button>
+          </div>
         </div>
         <div id="sitemapLoading" style="display:none">
-          <div class="loading"><div class="spinner"></div>Đang fetch sitemap...</div>
+          <div class="loading"><div class="spinner"></div><span id="loadMsg">Đang xử lý...</span></div>
           <div class="loading-log" id="sitemapLog"></div>
         </div>
       </div>
-
       <div id="sitemapResult" class="result-area">
         <div class="stats-row" id="sitemapStats"></div>
         <div class="card">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-            <div style="font-family:'Syne',sans-serif;font-weight:600;font-size:15px">Topic Clusters</div>
-            <div class="export-row" style="margin:0">
-              <div class="filter-bar" style="margin:0" id="clusterFilters">
-                <button class="filter-btn active" onclick="filterClusters('all',this)">All</button>
-                <button class="filter-btn" onclick="filterClusters('critical',this)">Khẩn cấp</button>
-                <button class="filter-btn" onclick="filterClusters('no-pillar',this)">No pillar</button>
-              </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div style="font-family:'Syne',sans-serif;font-weight:600;font-size:14px">Topic Clusters</div>
+            <div class="filter-bar" style="margin:0" id="clusterFilters">
+              <button class="f-btn active" onclick="filterC('all',this)">All</button>
+              <button class="f-btn" onclick="filterC('critical',this)">Khẩn cấp</button>
+              <button class="f-btn" onclick="filterC('no-pillar',this)">No pillar</button>
+              <button class="f-btn" onclick="filterC('has-pillar',this)">OK</button>
             </div>
           </div>
           <div class="cluster-list" id="clusterList"></div>
@@ -290,76 +223,60 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       </div>
     </div>
 
-    <!-- ====== ONPAGE TAB ====== -->
+    <!-- ONPAGE TAB -->
     <div id="tab-onpage" style="display:none">
       <div class="card">
         <div class="card-title">Onpage SEO Audit</div>
-        <div class="card-sub">Paste URL trang web — AI sẽ kiểm tra title, meta, headings, content, schema, speed issues và hơn 20 điểm SEO.</div>
+        <div class="card-sub">Paste URL — AI check 25+ điểm SEO: title, meta, headings, content, schema, OG tags, internal links, performance hints.</div>
         <div class="input-row">
-          <input class="url-input" id="onpageUrl" placeholder="https://example.com/blog/post/" />
-          <button class="btn btn-primary" id="onpageBtn" onclick="runOnpage()">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M6 3.5v2.5l2 1" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
-            Run Audit
-          </button>
+          <input class="url-input" id="onpageUrl" placeholder="https://example.com/blog/your-post/" />
+          <button class="btn btn-primary" id="onpageBtn" onclick="runOnpage()">Run Audit</button>
         </div>
         <div id="onpageLoading" style="display:none">
           <div class="loading"><div class="spinner"></div>Đang phân tích trang...</div>
           <div class="loading-log" id="onpageLog"></div>
         </div>
       </div>
-
       <div id="onpageResult" class="result-area">
         <div class="stats-row" id="onpageStats"></div>
         <div class="card">
           <div class="tabs">
-            <div class="tab active" onclick="switchOnpageTab('all',this)">Tất cả</div>
-            <div class="tab" onclick="switchOnpageTab('high',this)">🔴 Critical</div>
-            <div class="tab" onclick="switchOnpageTab('medium',this)">🟡 Warning</div>
-            <div class="tab" onclick="switchOnpageTab('low',this)">🔵 Info</div>
-            <div class="tab" onclick="switchOnpageTab('ok',this)">✅ Passed</div>
+            <div class="tab active" onclick="switchErrTab('all',this)">Tất cả</div>
+            <div class="tab" onclick="switchErrTab('high',this)">🔴 Critical</div>
+            <div class="tab" onclick="switchErrTab('medium',this)">🟡 Warning</div>
+            <div class="tab" onclick="switchErrTab('low',this)">🔵 Info</div>
+            <div class="tab" onclick="switchErrTab('ok',this)">✅ Passed</div>
           </div>
           <div class="error-list" id="errorList"></div>
         </div>
       </div>
     </div>
 
-    <!-- ====== INTERNAL LINK TAB ====== -->
+    <!-- INTERNAL TAB -->
     <div id="tab-internal" style="display:none">
       <div class="card">
         <div class="card-title">Internal Link Builder</div>
-        <div class="card-sub">Sau khi fetch sitemap, AI sẽ tạo bảng gợi ý internal link — anchor text, bài nguồn, bài đích, vị trí đặt link.</div>
+        <div class="card-sub">Fetch sitemap trước rồi qua đây — AI tạo bảng gợi ý internal link với anchor text, vị trí đặt, và lý do.</div>
         <div class="input-row">
-          <input class="url-input" id="internalUrl" placeholder="https://example.com/sitemap.xml (hoặc paste URLs)" />
-          <button class="btn btn-primary" id="internalBtn" onclick="runInternal()">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor"><path d="M9 2l3 3-3 3-1-1 1.5-1.5H3V4h6.5L8 3zM4 8L1 11l3 3 1-1L3.5 11.5H10V10H3.5L5 9z"/></svg>
-            Build Link Map
-          </button>
+          <input class="url-input" id="internalUrl" placeholder="https://example.com/sitemap.xml" />
+          <button class="btn btn-primary" id="internalBtn" onclick="runInternal()">Build Link Map</button>
         </div>
         <div id="internalLoading" style="display:none">
-          <div class="loading"><div class="spinner"></div>Đang xây dựng internal link map...</div>
+          <div class="loading"><div class="spinner"></div>Đang xây dựng link map...</div>
           <div class="loading-log" id="internalLog"></div>
         </div>
       </div>
-
       <div id="internalResult" class="result-area">
         <div class="stats-row" id="internalStats"></div>
         <div class="card">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-            <div style="font-family:'Syne',sans-serif;font-weight:600;font-size:15px">Internal Link Recommendations</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div style="font-family:'Syne',sans-serif;font-weight:600;font-size:14px">Link Recommendations</div>
             <button class="btn btn-secondary btn-sm" onclick="exportCSV()">↓ Export CSV</button>
           </div>
           <div style="overflow-x:auto">
-            <table class="link-table" id="linkTable">
-              <thead>
-                <tr>
-                  <th>Source Page</th>
-                  <th>Anchor Text</th>
-                  <th>Link To</th>
-                  <th>Priority</th>
-                  <th>Placement</th>
-                </tr>
-              </thead>
-              <tbody id="linkTableBody"></tbody>
+            <table class="link-table">
+              <thead><tr><th>Source</th><th>Anchor Text</th><th>Link To</th><th>Priority</th><th>Placement</th></tr></thead>
+              <tbody id="linkBody"></tbody>
             </table>
           </div>
         </div>
@@ -370,581 +287,386 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <script>
-// ============================
-// STATE
-// ============================
-let apiKey = localStorage.getItem('seo_api_key') || '';
+let apiKey = localStorage.getItem('seo_key') || '';
 let model = localStorage.getItem('seo_model') || 'anthropic/claude-sonnet-4-5';
-let sitemapData = null;
-let onpageData = null;
-let internalData = null;
-let allErrors = [];
-let allClusters = [];
-let allLinks = [];
+let allClusters = [], allErrors = [], allLinks = [], cachedUrls = [];
 
-// ============================
 // INIT
-// ============================
 window.onload = () => {
-  updateApiBadge();
-  if(localStorage.getItem('seo_theme') === 'dark') {
-    document.documentElement.setAttribute('data-theme','dark');
-    document.getElementById('themeBtn').textContent = '☽';
-  }
+  updateBadge();
+  if (localStorage.getItem('seo_theme') === 'dark') applyTheme('dark');
   document.getElementById('modelSelect').value = model;
+  document.getElementById('modelBadge').textContent = model.split('/')[1] || model;
 };
 
-// ============================
 // THEME
-// ============================
 function toggleTheme() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  document.getElementById('themeBtn').textContent = isDark ? '☀' : '☽';
-  localStorage.setItem('seo_theme', isDark ? 'light' : 'dark');
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  applyTheme(dark ? 'light' : 'dark');
+}
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeBtn').textContent = t === 'dark' ? '☽' : '☀';
+  localStorage.setItem('seo_theme', t);
 }
 
-// ============================
-// API KEY
-// ============================
-function openModal() {
-  document.getElementById('apiModal').classList.add('show');
-  document.getElementById('apiKeyInput').value = apiKey;
-  document.getElementById('modelSelect').value = model;
-}
+// MODAL
+function openModal() { document.getElementById('apiModal').classList.add('show'); document.getElementById('apiKeyInput').value = apiKey; }
 function closeModal() { document.getElementById('apiModal').classList.remove('show'); }
-function saveApiKey() {
+function saveKey() {
   apiKey = document.getElementById('apiKeyInput').value.trim();
   model = document.getElementById('modelSelect').value;
-  localStorage.setItem('seo_api_key',''+apiKey);
-  localStorage.setItem('seo_model',''+model);
+  localStorage.setItem('seo_key', apiKey);
+  localStorage.setItem('seo_model', model);
   document.getElementById('modelBadge').textContent = model.split('/')[1] || model;
-  updateApiBadge();
-  closeModal();
+  updateBadge(); closeModal();
 }
-function updateApiBadge() {
-  const badge = document.getElementById('apiBadge');
-  if(apiKey) {
-    badge.textContent = '✓ API Connected';
-    badge.className = 'api-badge';
-  } else {
-    badge.textContent = 'No API Key';
-    badge.className = 'api-badge no-key';
-  }
+function updateBadge() {
+  const b = document.getElementById('apiBadge');
+  b.textContent = apiKey ? '✓ API Connected' : 'No API Key';
+  b.className = 'api-badge' + (apiKey ? ' ok' : '');
 }
 
-// ============================
-// TAB SWITCHING
-// ============================
+// TABS
 function switchTab(tab) {
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
   document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-  ['sitemap','onpage','internal'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t === tab ? 'contents' : 'none';
-  });
-}
-function switchOnpageTab(type, el) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  renderErrors(type);
+  ['sitemap','onpage','internal'].forEach(t => document.getElementById('tab-'+t).style.display = t===tab ? 'contents' : 'none');
 }
 
-// ============================
-// CORS PROXY FETCH
-// ============================
-async function proxyFetch(url) {
-  const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-  const resp = await fetch(proxy);
-  const data = await resp.json();
-  return data.contents;
+// MODE TOGGLE
+function setMode(m) {
+  document.getElementById('modeUrl').style.display = m==='url' ? 'block' : 'none';
+  document.getElementById('modePaste').style.display = m==='paste' ? 'block' : 'none';
+  document.getElementById('modeUrlBtn').classList.toggle('active', m==='url');
+  document.getElementById('modePasteBtn').classList.toggle('active', m==='paste');
 }
 
-// ============================
-// AI CALL
-// ============================
-async function callAI(systemPrompt, userPrompt) {
-  if (!apiKey) { openModal(); throw new Error('No API key'); }
-  const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': window.location.href,
-      'X-Title': 'SEO Lens'
-    },
-    body: JSON.stringify({
-      model: model,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt }
-      ],
-      max_tokens: 4000
-    })
-  });
-  if (!resp.ok) {
-    const err = await resp.text();
-    throw new Error('AI error: ' + err);
-  }
-  const json = await resp.json();
-  return json.choices[0].message.content;
-}
-
-function log(elId, msg) {
-  const el = document.getElementById(elId);
+// LOGGING
+function log(id, msg) {
+  const el = document.getElementById(id);
   el.innerHTML += `→ ${msg}<br>`;
   el.scrollTop = el.scrollHeight;
 }
 
-// ============================
-// SITEMAP
-// ============================
+// PROXY FETCH — 3 proxy fallback
+async function proxyFetch(url) {
+  const proxies = [
+    async u => { const r = await fetch(`https://corsproxy.io/?${encodeURIComponent(u)}`); if(!r.ok) throw new Error('corsproxy '+r.status); return r.text(); },
+    async u => { const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`); if(!r.ok) throw new Error('allorigins '+r.status); const d = await r.json(); if(!d.contents) throw new Error('empty'); return d.contents; },
+    async u => { const r = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`); if(!r.ok) throw new Error('codetabs '+r.status); return r.text(); }
+  ];
+  let lastErr;
+  for (const p of proxies) {
+    try {
+      const result = await Promise.race([p(url), new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),8000))]);
+      if (result && result.length > 50) return result;
+    } catch(e) { lastErr = e; }
+  }
+  throw new Error('Proxy bị block (' + (lastErr?.message||'unknown') + '). Dùng Paste URL list thủ công.');
+}
+
+// AI CALL
+async function callAI(sys, user) {
+  if (!apiKey) { openModal(); throw new Error('No API key'); }
+  const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method:'POST',
+    headers:{'Authorization':'Bearer '+apiKey,'Content-Type':'application/json','HTTP-Referer':location.href,'X-Title':'SEO Lens'},
+    body:JSON.stringify({model, messages:[{role:'system',content:sys},{role:'user',content:user}], max_tokens:4000})
+  });
+  if (!r.ok) throw new Error('AI error ' + r.status + ': ' + await r.text());
+  const j = await r.json();
+  return j.choices[0].message.content;
+}
+
+// PARSE XML URLS
+function parseUrls(xml) {
+  const locs = xml.match(/<loc>(.*?)<\/loc>/g) || [];
+  return [...new Set(locs.map(m=>m.replace(/<\/?loc>/g,'').trim()).filter(u=>
+    !u.includes('wp-content') && !u.includes('/tag/') && !u.includes('/author/') &&
+    !u.match(/\.(jpg|jpeg|png|gif|pdf|webp)$/)
+  ))];
+}
+
+// ==============================
+// SITEMAP — URL mode
+// ==============================
 async function runSitemap() {
   if (!apiKey) { openModal(); return; }
   const url = document.getElementById('sitemapUrl').value.trim();
   if (!url) return;
-
-  document.getElementById('sitemapLoading').style.display = 'block';
-  document.getElementById('sitemapLog').innerHTML = '';
-  document.getElementById('sitemapResult').classList.remove('show');
+  showLoading('sitemap', true);
   document.getElementById('sitemapBtn').disabled = true;
-
   try {
-    log('sitemapLog', 'Fetching sitemap via proxy...');
-    let xml = await proxyFetch(url);
-
-    // Parse URLs from sitemap
-    let urls = [];
-    const locMatches = xml.match(/<loc>(.*?)<\/loc>/g) || [];
-    locMatches.forEach(m => {
-      const u = m.replace(/<\/?loc>/g,'').trim();
-      if (!u.includes('wp-content') && !u.includes('/tag/') && !u.includes('/author/') && !u.endsWith('.jpg') && !u.endsWith('.png')) {
-        urls.push(u);
-      }
-    });
-
-    // If sitemap index, fetch first few child sitemaps
-    if (xml.includes('<sitemapindex')) {
-      log('sitemapLog', `Sitemap index detected — fetching child sitemaps...`);
-      const childUrls = xml.match(/<loc>(.*?)<\/loc>/g)?.map(m => m.replace(/<\/?loc>/g,'').trim()) || [];
-      urls = [];
-      for (let cu of childUrls.slice(0,6)) {
-        try {
-          const childXml = await proxyFetch(cu);
-          const childLocs = childXml.match(/<loc>(.*?)<\/loc>/g) || [];
-          childLocs.forEach(m => {
-            const u = m.replace(/<\/?loc>/g,'').trim();
-            if (!u.includes('wp-content') && !u.includes('/tag/') && !u.includes('/author/') && !u.endsWith('.jpg')) {
-              urls.push(u);
-            }
-          });
-        } catch(e) {}
-      }
+    log('sitemapLog', 'Thử proxy 1: corsproxy.io...');
+    let xml;
+    try { xml = await proxyFetch(url); }
+    catch(e) {
+      log('sitemapLog', e.message);
+      log('sitemapLog', '→ Chuyển sang chế độ Paste URL list thủ công...');
+      setMode('paste');
+      return;
     }
+    let urls = parseUrls(xml);
+    if (xml.includes('<sitemapindex')) {
+      log('sitemapLog', 'Sitemap index — đang fetch child sitemaps...');
+      const children = parseUrls(xml);
+      urls = [];
+      for (const cu of children.slice(0,6)) {
+        try { urls.push(...parseUrls(await proxyFetch(cu))); } catch(e){}
+      }
+      urls = [...new Set(urls)];
+    }
+    log('sitemapLog', `Tìm thấy ${urls.length} URLs. Gửi AI phân tích...`);
+    await analyseUrls(urls, url);
+  } catch(e) { log('sitemapLog', 'Lỗi: ' + e.message); }
+  finally { showLoading('sitemap', false); document.getElementById('sitemapBtn').disabled = false; }
+}
 
-    const urlList = [...new Set(urls)];
-    log('sitemapLog', `Found ${urlList.length} URLs. Sending to AI for cluster analysis...`);
+// ==============================
+// SITEMAP — Paste mode
+// ==============================
+async function runPaste() {
+  if (!apiKey) { openModal(); return; }
+  const raw = document.getElementById('urlPaste').value.trim();
+  const urls = [...new Set(raw.split('\n').map(u=>u.trim()).filter(u=>u.startsWith('http')))];
+  if (!urls.length) { alert('Không tìm thấy URL hợp lệ (phải bắt đầu bằng http)'); return; }
+  showLoading('sitemap', true);
+  log('sitemapLog', `Đã nhận ${urls.length} URLs từ paste. Gửi AI...`);
+  try { await analyseUrls(urls, urls[0]); }
+  catch(e) { log('sitemapLog', 'Lỗi: ' + e.message); }
+  finally { showLoading('sitemap', false); }
+}
 
-    const systemPrompt = `You are an expert SEO strategist. Analyze the URLs and classify them into topic clusters.
+function showLoading(tab, show) {
+  document.getElementById(tab+'Loading').style.display = show ? 'block' : 'none';
+  if (show) document.getElementById(tab+'Log').innerHTML = '';
+  if (show) document.getElementById(tab+'Result').classList.remove('show');
+}
 
-Return ONLY valid JSON with this exact structure:
+// ==============================
+// ANALYSE URLS (shared)
+// ==============================
+async function analyseUrls(urlList, originUrl) {
+  cachedUrls = urlList;
+  if (originUrl) document.getElementById('internalUrl').value = originUrl;
+
+  const sys = `You are an expert SEO strategist. Analyse URL list and classify into topic clusters.
+Return ONLY valid JSON (no markdown, no explanation):
 {
-  "summary": { "total": number, "blogs": number, "pillars": number, "orphans": number },
-  "clusters": [
+  "summary":{"total":N,"blogs":N,"pillars":N,"orphans":N},
+  "clusters":[
     {
-      "id": "string",
-      "name": "Cluster Name",
-      "color": "#hexcolor",
-      "pillarUrl": "url or null",
-      "hasPillar": true/false,
-      "status": "critical|no-pillar|has-pillar",
-      "existingCount": number,
-      "posts": [
-        { "url": "url", "type": "pillar|cluster|orphan" }
-      ],
-      "newArticles": [
-        { "priority": "high|medium|low", "title": "Article title", "slug": "/blog/slug/", "wordCount": "1,500w", "reason": "gap reason" }
-      ],
-      "dupes": [
-        { "keep": "/blog/keep-this/", "action": "Merge or redirect description" }
-      ],
-      "tags": ["tag1", "tag2"]
+      "id":"string","name":"Cluster Name","color":"#hex",
+      "pillarUrl":"url or null","hasPillar":true/false,
+      "status":"critical|no-pillar|has-pillar",
+      "existingCount":N,
+      "posts":[{"url":"url","type":"pillar|cluster|orphan"}],
+      "newArticles":[{"priority":"high|medium|low","title":"Title","slug":"/blog/slug/","wordCount":"1,500w","reason":"gap reason"}],
+      "dupes":[{"keep":"/keep-url/","action":"description"}],
+      "tags":["tag1","tag2"]
     }
   ]
 }
+Rules: group by topic, identify pillars (broad service/landing pages), mark "critical" if has pillar but 0 blogs OR missing pillar, suggest 3-8 new non-existing articles per cluster, find near-duplicates. Return ONLY JSON.`;
 
-Rules:
-- Group URLs by topic (testimonial video, corporate video, construction, training, brand story, commercial, drone, real estate, AI/tech, etc.)
-- Identify pillar pages: service/landing pages (non-blog, broad URLs)
-- Mark status "critical" if cluster has pillar but 0 blog posts, OR cluster is missing pillar
-- Suggest 3-8 new articles per cluster that don't exist yet
-- Identify near-duplicate posts (same topic, different slug)
-- Pick distinct colors for each cluster
-- Return ONLY JSON, no markdown, no explanation`;
+  const raw = await callAI(sys, `Analyse ${urlList.length} URLs:\n\n${urlList.join('\n')}`);
+  log('sitemapLog', 'AI done. Rendering...');
 
-    const aiResult = await callAI(systemPrompt, `Analyze these ${urlList.length} URLs:\n\n${urlList.join('\n')}`);
+  let data;
+  try { data = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+  catch(e) { throw new Error('AI returned invalid JSON. Thử lại.'); }
 
-    log('sitemapLog', 'AI analysis complete. Rendering results...');
-
-    let parsed;
-    try {
-      const clean = aiResult.replace(/```json|```/g,'').trim();
-      parsed = JSON.parse(clean);
-    } catch(e) {
-      throw new Error('AI returned invalid JSON. Try again.');
-    }
-
-    sitemapData = parsed;
-    allClusters = parsed.clusters || [];
-    renderSitemapResults(parsed);
-
-    // Auto-populate internal link tab
-    document.getElementById('internalUrl').value = url;
-
-  } catch(e) {
-    log('sitemapLog', `Error: ${e.message}`);
-  } finally {
-    document.getElementById('sitemapLoading').style.display = 'none';
-    document.getElementById('sitemapBtn').disabled = false;
-  }
-}
-
-function renderSitemapResults(data) {
+  allClusters = data.clusters || [];
   const s = data.summary || {};
   document.getElementById('sitemapStats').innerHTML = `
-    <div class="stat-box"><div class="stat-num">${s.total||0}</div><div class="stat-label">Total URLs</div></div>
+    <div class="stat-box"><div class="stat-num">${s.total||urlList.length}</div><div class="stat-label">Total URLs</div></div>
     <div class="stat-box blue"><div class="stat-num">${s.blogs||0}</div><div class="stat-label">Blog Posts</div></div>
-    <div class="stat-box green"><div class="stat-num">${s.pillars||0}</div><div class="stat-label">Pillar Pages</div></div>
-    <div class="stat-box red"><div class="stat-num">${s.orphans||0}</div><div class="stat-label">Orphan Pages</div></div>
-    <div class="stat-box amber"><div class="stat-num">${(data.clusters||[]).reduce((a,c)=>a+(c.newArticles||[]).length,0)}</div><div class="stat-label">New Articles Needed</div></div>
-  `;
+    <div class="stat-box green"><div class="stat-num">${s.pillars||0}</div><div class="stat-label">Pillars</div></div>
+    <div class="stat-box red"><div class="stat-num">${s.orphans||0}</div><div class="stat-label">Orphans</div></div>
+    <div class="stat-box amber"><div class="stat-num">${allClusters.reduce((a,c)=>a+(c.newArticles||[]).length,0)}</div><div class="stat-label">New Articles Needed</div></div>`;
   renderClusters(allClusters);
   document.getElementById('sitemapResult').classList.add('show');
 }
 
-function renderClusters(clusters) {
-  const list = document.getElementById('clusterList');
-  if (!clusters.length) { list.innerHTML = '<div class="empty-state"><div class="empty-icon">○</div><div class="empty-text">No clusters found</div></div>'; return; }
-  list.innerHTML = clusters.map(c => {
-    const statusPill = c.status === 'critical'
-      ? `<span class="pill pill-red">Khẩn cấp</span>`
-      : !c.hasPillar
-      ? `<span class="pill pill-amber">No pillar</span>`
-      : `<span class="pill pill-green">OK</span>`;
-    const articlesHtml = (c.newArticles||[]).map(a => `
-      <div class="article-row">
+function renderClusters(list) {
+  const el = document.getElementById('clusterList');
+  if (!list.length) { el.innerHTML = '<div class="empty">Không tìm thấy cluster nào.</div>'; return; }
+  el.innerHTML = list.map(c => {
+    const sp = c.status==='critical' ? `<span class="pill pill-red">Khẩn cấp</span>` : !c.hasPillar ? `<span class="pill pill-amber">No pillar</span>` : `<span class="pill pill-green">OK</span>`;
+    const arts = (c.newArticles||[]).map(a=>`
+      <div class="a-row">
         <span class="pill ${a.priority==='high'?'pill-red':a.priority==='medium'?'pill-amber':'pill-blue'}" style="flex-shrink:0;margin-top:1px">${a.priority}</span>
         <div style="flex:1;min-width:0">
-          <div class="article-title">${a.title}</div>
-          <div class="article-slug">${a.slug}</div>
-          <div class="article-wc">${a.wordCount} · ${a.reason||''}</div>
+          <div class="a-title">${a.title}</div>
+          <div class="a-slug">${a.slug}</div>
+          <div class="a-wc">${a.wordCount} · ${a.reason||''}</div>
         </div>
       </div>`).join('');
-    const dupesHtml = (c.dupes||[]).length ? `
-      <div class="body-section">
-        <div class="section-label">Duplicate / Cleanup (${c.dupes.length})</div>
-        ${c.dupes.map(d=>`<div style="font-size:11.5px;color:var(--text2);padding:5px 0;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace">
-          <span style="color:var(--green)">Keep:</span> ${d.keep}<br>
-          <span style="color:var(--amber)">Action:</span> ${d.action}
-        </div>`).join('')}
-      </div>` : '';
-    const tagsHtml = (c.tags||[]).map(t=>`<span class="pill pill-blue">${t}</span>`).join(' ');
-    return `
-    <div class="cluster-card" data-status="${c.status}" data-has-pillar="${c.hasPillar}">
-      <div class="cluster-header" onclick="toggleCluster(this)">
-        <div class="cluster-dot" style="background:${c.color||'#888'}"></div>
-        <div class="cluster-name">${c.name}</div>
-        <div class="cluster-meta">
-          ${statusPill}
-          <span class="pill pill-gray">${c.existingCount||0} posts</span>
-          <span class="pill pill-amber">+${(c.newArticles||[]).length} new</span>
-          <span class="chevron">▶</span>
-        </div>
+    const dupes = (c.dupes||[]).length ? `<div class="d-section"><div class="d-title">Cần dọn (${c.dupes.length} cặp)</div>${c.dupes.map(d=>`<div class="d-row">Keep: ${d.keep} → ${d.action}</div>`).join('')}</div>` : '';
+    const tags = (c.tags||[]).map(t=>`<span class="pill pill-blue">${t}</span>`).join(' ');
+    return `<div class="c-card" data-status="${c.status}" data-has="${c.hasPillar}">
+      <div class="c-header" onclick="toggleC(this)">
+        <div class="c-dot" style="background:${c.color||'#888'}"></div>
+        <div class="c-name">${c.name}</div>
+        <div class="c-meta">${sp}<span class="pill pill-gray">${c.existingCount||0} posts</span><span class="pill pill-amber">+${(c.newArticles||[]).length}</span><span class="chevron">▶</span></div>
       </div>
-      <div class="cluster-body">
-        <div class="body-section">
-          <div class="section-label">Pillar Page</div>
-          ${c.hasPillar && c.pillarUrl
-            ? `<div class="pillar-chip">🏛 ${c.pillarUrl}</div>`
-            : `<div class="pillar-chip no-pillar-chip">⚠ Chưa có pillar page — cần tạo landing page</div>`}
-        </div>
-        ${tagsHtml ? `<div class="body-section"><div class="section-label">Suggested Tags</div>${tagsHtml}</div>` : ''}
-        <div class="body-section">
-          <div class="section-label">New Articles Needed (${(c.newArticles||[]).length})</div>
-          <div class="article-list">${articlesHtml||'<div style="font-size:12px;color:var(--text3)">No gaps found</div>'}</div>
-        </div>
-        ${dupesHtml}
+      <div class="c-body">
+        <div class="sec-label">Pillar Page</div>
+        ${c.hasPillar&&c.pillarUrl?`<div class="pillar-chip ok">🏛 ${c.pillarUrl}</div>`:`<div class="pillar-chip missing">⚠ Chưa có pillar page — cần tạo landing page</div>`}
+        ${tags?`<div class="sec-label">WordPress Tags</div><div style="display:flex;gap:4px;flex-wrap:wrap">${tags}</div>`:''}
+        <div class="sec-label">Bài cần viết mới (${(c.newArticles||[]).length})</div>
+        <div class="a-list">${arts||'<div style="font-size:11px;color:var(--text3)">Không có gap</div>'}</div>
+        ${dupes}
       </div>
     </div>`;
   }).join('');
 }
 
-function toggleCluster(header) {
-  const body = header.nextElementSibling;
-  const arrow = header.querySelector('.chevron');
-  body.classList.toggle('open');
-  arrow.classList.toggle('open');
+function toggleC(h) {
+  const b = h.nextElementSibling;
+  const ch = h.querySelector('.chevron');
+  b.classList.toggle('open'); ch.classList.toggle('open');
 }
 
-function filterClusters(type, btn) {
-  document.querySelectorAll('#clusterFilters .filter-btn').forEach(b => b.classList.remove('active'));
+function filterC(type, btn) {
+  document.querySelectorAll('#clusterFilters .f-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  let filtered = allClusters;
-  if (type === 'critical') filtered = allClusters.filter(c => c.status === 'critical');
-  if (type === 'no-pillar') filtered = allClusters.filter(c => !c.hasPillar);
-  renderClusters(filtered);
+  const map = {all:allClusters, critical:allClusters.filter(c=>c.status==='critical'), 'no-pillar':allClusters.filter(c=>!c.hasPillar), 'has-pillar':allClusters.filter(c=>c.hasPillar&&c.status!=='critical')};
+  renderClusters(map[type]||allClusters);
 }
 
-// ============================
+// ==============================
 // ONPAGE AUDIT
-// ============================
+// ==============================
 async function runOnpage() {
   if (!apiKey) { openModal(); return; }
   const url = document.getElementById('onpageUrl').value.trim();
   if (!url) return;
-
-  document.getElementById('onpageLoading').style.display = 'block';
-  document.getElementById('onpageLog').innerHTML = '';
-  document.getElementById('onpageResult').classList.remove('show');
+  showLoading('onpage', true);
   document.getElementById('onpageBtn').disabled = true;
-
   try {
     log('onpageLog', 'Fetching page HTML...');
     let html = '';
-    try {
-      html = await proxyFetch(url);
-    } catch(e) {
-      html = '(Could not fetch HTML — will analyse URL structure only)';
-    }
-
-    log('onpageLog', 'Sending to AI for onpage analysis...');
-
-    const systemPrompt = `You are an expert SEO auditor. Analyse the HTML of a webpage and return a detailed onpage SEO audit.
-
+    try { html = await proxyFetch(url); } catch(e) { html = '(Không fetch được HTML — phân tích theo URL)'; log('onpageLog', 'Proxy bị block, phân tích theo URL structure...'); }
+    log('onpageLog', 'Gửi AI phân tích SEO...');
+    const sys = `You are an expert SEO auditor. Analyse HTML and return a detailed onpage SEO audit.
 Return ONLY valid JSON:
-{
-  "url": "the url",
-  "score": 0-100,
-  "summary": { "critical": number, "warning": number, "info": number, "passed": number },
-  "checks": [
-    {
-      "id": "unique_id",
-      "category": "Title|Meta|Headings|Content|Schema|Performance|UX|Links|Images",
-      "title": "Issue title",
-      "severity": "high|medium|low|ok",
-      "description": "What the issue is and why it matters",
-      "fix": "Specific fix recommendation",
-      "value": "Current value found (if applicable)"
-    }
-  ]
-}
-
-Check these 25+ points:
-Title tag: length (50-60 chars), keyword placement, uniqueness
-Meta description: length (150-160 chars), CTA, keyword
-H1: exists, single, contains keyword, length
-H2-H6: hierarchy, keyword usage
-Content: word count (estimate), keyword density, readability
-Images: alt tags, descriptive filenames, lazy loading
-Internal links: presence, anchor text quality
-External links: nofollow on outbound
-Canonical tag: present, self-referencing
-Schema markup: present, type
-Open Graph: og:title, og:description, og:image
-Twitter card: present
-Mobile: viewport meta tag
-Page speed hints: render-blocking scripts, unminified CSS/JS
-Security: HTTPS
-URL structure: clean, keyword-rich, not too long
-Structured data: FAQ, breadcrumb, article schema
-Core Web Vitals hints from HTML
-Thin content warning if < 300 words
-Duplicate content signals
-
+{"url":"string","score":0-100,"summary":{"critical":N,"warning":N,"info":N,"passed":N},"checks":[{"id":"unique","category":"Title|Meta|Headings|Content|Schema|Performance|UX|Links|Images","title":"Issue title","severity":"high|medium|low|ok","description":"What the issue is","fix":"Specific fix","value":"Current value"}]}
+Check 25+ points: title (50-60 chars, keyword first), meta desc (150-160 chars), H1 (single, keyword), heading hierarchy, word count, keyword density, image alt tags, internal links, canonical, schema, OG tags, Twitter card, viewport meta, HTTPS, URL structure, robots meta, page speed hints (render-blocking, unminified), thin content (<300w), duplicate signals.
 Return ONLY JSON.`;
-
-    const snippet = html.substring(0, 12000);
-    const result = await callAI(systemPrompt, `URL: ${url}\n\nHTML snippet:\n${snippet}`);
-
-    log('onpageLog', 'Analysis complete. Rendering audit...');
-
-    let parsed;
-    try {
-      parsed = JSON.parse(result.replace(/```json|```/g,'').trim());
-    } catch(e) {
-      throw new Error('AI returned invalid JSON.');
-    }
-
-    onpageData = parsed;
-    allErrors = parsed.checks || [];
-    renderOnpageResults(parsed);
-
-  } catch(e) {
-    log('onpageLog', 'Error: ' + e.message);
-  } finally {
-    document.getElementById('onpageLoading').style.display = 'none';
-    document.getElementById('onpageBtn').disabled = false;
-  }
+    const result = await callAI(sys, `URL: ${url}\n\nHTML:\n${html.substring(0,12000)}`);
+    let data;
+    try { data = JSON.parse(result.replace(/```json|```/g,'').trim()); }
+    catch(e) { throw new Error('AI returned invalid JSON'); }
+    allErrors = data.checks || [];
+    const s = data.summary || {};
+    const sc = data.score || 0;
+    const scClass = sc>=80?'green':sc>=60?'amber':'red';
+    document.getElementById('onpageStats').innerHTML = `
+      <div class="stat-box ${scClass}"><div class="stat-num">${sc}</div><div class="stat-label">SEO Score</div></div>
+      <div class="stat-box red"><div class="stat-num">${s.critical||0}</div><div class="stat-label">Critical</div></div>
+      <div class="stat-box amber"><div class="stat-num">${s.warning||0}</div><div class="stat-label">Warning</div></div>
+      <div class="stat-box blue"><div class="stat-num">${s.info||0}</div><div class="stat-label">Info</div></div>
+      <div class="stat-box green"><div class="stat-num">${s.passed||0}</div><div class="stat-label">Passed</div></div>`;
+    renderErrors('all');
+    document.getElementById('onpageResult').classList.add('show');
+  } catch(e) { log('onpageLog', 'Lỗi: ' + e.message); }
+  finally { showLoading('onpage', false); document.getElementById('onpageBtn').disabled = false; }
 }
 
-function renderOnpageResults(data) {
-  const s = data.summary || {};
-  const score = data.score || 0;
-  const scoreColor = score >= 80 ? 'green' : score >= 60 ? 'amber' : 'red';
-  document.getElementById('onpageStats').innerHTML = `
-    <div class="stat-box ${scoreColor}"><div class="stat-num">${score}</div><div class="stat-label">SEO Score</div></div>
-    <div class="stat-box red"><div class="stat-num">${s.critical||0}</div><div class="stat-label">Critical</div></div>
-    <div class="stat-box amber"><div class="stat-num">${s.warning||0}</div><div class="stat-label">Warnings</div></div>
-    <div class="stat-box blue"><div class="stat-num">${s.info||0}</div><div class="stat-label">Info</div></div>
-    <div class="stat-box green"><div class="stat-num">${s.passed||0}</div><div class="stat-label">Passed</div></div>
-  `;
-  renderErrors('all');
-  document.getElementById('onpageResult').classList.add('show');
+function switchErrTab(t, el) {
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active'); renderErrors(t);
 }
 
-function renderErrors(filter) {
+function renderErrors(f) {
   const list = document.getElementById('errorList');
-  let errors = allErrors;
-  if (filter === 'high') errors = allErrors.filter(e => e.severity === 'high');
-  if (filter === 'medium') errors = allErrors.filter(e => e.severity === 'medium');
-  if (filter === 'low') errors = allErrors.filter(e => e.severity === 'low');
-  if (filter === 'ok') errors = allErrors.filter(e => e.severity === 'ok');
-
-  if (!errors.length) { list.innerHTML = '<div class="empty-state"><div class="empty-icon">✓</div><div class="empty-text">No issues in this category</div></div>'; return; }
-
-  list.innerHTML = errors.map(e => {
-    const cls = e.severity === 'high' ? 'err-high' : e.severity === 'medium' ? 'err-med' : e.severity === 'low' ? 'err-low' : 'err-ok';
-    const icon = e.severity === 'high' ? '!' : e.severity === 'medium' ? '~' : e.severity === 'low' ? 'i' : '✓';
-    return `
-    <div class="error-item ${cls}">
-      <div class="error-icon">${icon}</div>
-      <div class="error-content">
-        <div class="error-title">${e.category} — ${e.title}</div>
-        <div class="error-desc">${e.description}${e.value ? `<br><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)">Found: ${e.value}</span>` : ''}</div>
-        ${e.fix ? `<div class="error-fix">→ ${e.fix}</div>` : ''}
+  let errs = allErrors;
+  if (f==='high') errs = allErrors.filter(e=>e.severity==='high');
+  if (f==='medium') errs = allErrors.filter(e=>e.severity==='medium');
+  if (f==='low') errs = allErrors.filter(e=>e.severity==='low');
+  if (f==='ok') errs = allErrors.filter(e=>e.severity==='ok');
+  if (!errs.length) { list.innerHTML = '<div class="empty">Không có issue trong mục này.</div>'; return; }
+  list.innerHTML = errs.map(e => {
+    const cls = e.severity==='high'?'err-high':e.severity==='medium'?'err-med':e.severity==='low'?'err-low':'err-ok';
+    const icon = e.severity==='high'?'!':e.severity==='medium'?'~':e.severity==='low'?'i':'✓';
+    return `<div class="error-item ${cls}">
+      <div class="e-icon">${icon}</div>
+      <div style="flex:1">
+        <div class="e-title">${e.category} — ${e.title}</div>
+        <div class="e-desc">${e.description}${e.value?`<br><span class="e-val">Found: ${e.value}</span>`:''}</div>
+        ${e.fix?`<div class="e-fix">→ ${e.fix}</div>`:''}
       </div>
     </div>`;
   }).join('');
 }
 
-// ============================
+// ==============================
 // INTERNAL LINKS
-// ============================
+// ==============================
 async function runInternal() {
   if (!apiKey) { openModal(); return; }
   const url = document.getElementById('internalUrl').value.trim();
   if (!url) return;
-
-  document.getElementById('internalLoading').style.display = 'block';
-  document.getElementById('internalLog').innerHTML = '';
-  document.getElementById('internalResult').classList.remove('show');
+  showLoading('internal', true);
   document.getElementById('internalBtn').disabled = true;
-
   try {
-    let urlList = [];
-
-    if (sitemapData && allClusters.length) {
-      log('internalLog', 'Using sitemap data already fetched...');
-      allClusters.forEach(c => (c.posts||[]).forEach(p => urlList.push(p.url)));
-    } else {
+    let urls = cachedUrls;
+    if (!urls.length) {
       log('internalLog', 'Fetching sitemap...');
-      const xml = await proxyFetch(url);
-      const locs = xml.match(/<loc>(.*?)<\/loc>/g) || [];
-      locs.forEach(m => {
-        const u = m.replace(/<\/?loc>/g,'').trim();
-        if (!u.includes('wp-content') && !u.includes('/tag/') && !u.endsWith('.jpg')) urlList.push(u);
-      });
+      try {
+        const xml = await proxyFetch(url);
+        urls = parseUrls(xml);
+        if (xml.includes('<sitemapindex')) {
+          const children = parseUrls(xml);
+          urls = [];
+          for (const cu of children.slice(0,5)) {
+            try { urls.push(...parseUrls(await proxyFetch(cu))); } catch(e){}
+          }
+        }
+      } catch(e) { log('internalLog', 'Proxy bị block. Dùng tab Sitemap → Paste URL list trước.'); return; }
     }
-
-    urlList = [...new Set(urlList)].slice(0, 120);
-    log('internalLog', `${urlList.length} URLs. Building link map with AI...`);
-
-    const systemPrompt = `You are an expert SEO internal linking strategist.
-Given a list of URLs, create an internal link recommendation table.
-
+    urls = [...new Set(urls)].slice(0,120);
+    log('internalLog', `${urls.length} URLs. AI đang tạo link map...`);
+    const sys = `You are an SEO internal linking expert.
 Return ONLY valid JSON:
-{
-  "summary": { "totalLinks": number, "pillarsLinked": number, "clustersLinked": number },
-  "links": [
-    {
-      "sourceUrl": "url of source page",
-      "sourceTitle": "short page title",
-      "anchorText": "exact anchor text to use",
-      "targetUrl": "url of page to link to",
-      "targetTitle": "short target page title",
-      "priority": "high|medium|low",
-      "placement": "Introduction|Body paragraph|CTA section|Related section",
-      "reason": "why this link makes sense"
-    }
-  ]
+{"summary":{"totalLinks":N,"pillarsLinked":N,"clustersLinked":N},"links":[{"sourceUrl":"url","sourceTitle":"short title","anchorText":"anchor text","targetUrl":"url","targetTitle":"short title","priority":"high|medium|low","placement":"Introduction|Body paragraph|CTA section|Related section","reason":"why this link"}]}
+Rules: pillar↔cluster = high priority, cluster→cluster = medium, max 80 links, anchor text 2-5 words natural keyword-rich. Return ONLY JSON.`;
+    const result = await callAI(sys, `URLs:\n${urls.join('\n')}`);
+    let data;
+    try { data = JSON.parse(result.replace(/```json|```/g,'').trim()); }
+    catch(e) { throw new Error('AI returned invalid JSON'); }
+    allLinks = data.links || [];
+    const s = data.summary || {};
+    document.getElementById('internalStats').innerHTML = `
+      <div class="stat-box"><div class="stat-num">${s.totalLinks||allLinks.length}</div><div class="stat-label">Total Links</div></div>
+      <div class="stat-box green"><div class="stat-num">${s.pillarsLinked||0}</div><div class="stat-label">Pillar Links</div></div>
+      <div class="stat-box blue"><div class="stat-num">${s.clustersLinked||0}</div><div class="stat-label">Cluster Links</div></div>
+      <div class="stat-box red"><div class="stat-num">${allLinks.filter(l=>l.priority==='high').length}</div><div class="stat-label">High Priority</div></div>`;
+    document.getElementById('linkBody').innerHTML = allLinks.map(l=>{
+      const pc = l.priority==='high'?'pill-red':l.priority==='medium'?'pill-amber':'pill-blue';
+      return `<tr>
+        <td><div style="font-size:12px;font-weight:500">${l.sourceTitle||''}</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)">${l.sourceUrl||''}</div></td>
+        <td><span class="anchor-tag">${l.anchorText||''}</span></td>
+        <td><div style="font-size:12px">${l.targetTitle||''}</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)">${l.targetUrl||''}</div></td>
+        <td><span class="pill ${pc}">${l.priority||''}</span></td>
+        <td><div style="font-size:12px">${l.placement||''}</div><div style="font-size:10.5px;color:var(--text3);margin-top:2px">${l.reason||''}</div></td>
+      </tr>`;
+    }).join('');
+    document.getElementById('internalResult').classList.add('show');
+  } catch(e) { log('internalLog', 'Lỗi: ' + e.message); }
+  finally { showLoading('internal', false); document.getElementById('internalBtn').disabled = false; }
 }
 
-Rules:
-- Create 3-5 link suggestions per pillar page (pillar → cluster and cluster → pillar)
-- Create 2-3 links per cluster page (to pillar + to related clusters)
-- Anchor text must be natural, keyword-rich, 2-5 words
-- Priority "high" = pillar ↔ cluster links; "medium" = cluster → cluster; "low" = misc
-- Maximum 80 link suggestions total
-- Return ONLY JSON`;
-
-    const result = await callAI(systemPrompt, `URLs:\n${urlList.join('\n')}`);
-    log('internalLog', 'AI done. Rendering table...');
-
-    let parsed;
-    try {
-      parsed = JSON.parse(result.replace(/```json|```/g,'').trim());
-    } catch(e) {
-      throw new Error('AI returned invalid JSON.');
-    }
-
-    internalData = parsed;
-    allLinks = parsed.links || [];
-    renderInternalResults(parsed);
-
-  } catch(e) {
-    log('internalLog', 'Error: ' + e.message);
-  } finally {
-    document.getElementById('internalLoading').style.display = 'none';
-    document.getElementById('internalBtn').disabled = false;
-  }
-}
-
-function renderInternalResults(data) {
-  const s = data.summary || {};
-  document.getElementById('internalStats').innerHTML = `
-    <div class="stat-box"><div class="stat-num">${s.totalLinks||allLinks.length}</div><div class="stat-label">Total Links</div></div>
-    <div class="stat-box green"><div class="stat-num">${s.pillarsLinked||0}</div><div class="stat-label">Pillar Links</div></div>
-    <div class="stat-box blue"><div class="stat-num">${s.clustersLinked||0}</div><div class="stat-label">Cluster Links</div></div>
-    <div class="stat-box red"><div class="stat-num">${allLinks.filter(l=>l.priority==='high').length}</div><div class="stat-label">High Priority</div></div>
-  `;
-
-  const tbody = document.getElementById('linkTableBody');
-  tbody.innerHTML = allLinks.map(l => {
-    const priClass = l.priority === 'high' ? 'pill-red' : l.priority === 'medium' ? 'pill-amber' : 'pill-blue';
-    return `<tr>
-      <td><div style="font-size:12px;font-weight:500">${l.sourceTitle||''}</div><div style="font-family:'DM Mono',monospace;font-size:10.5px;color:var(--text3)">${l.sourceUrl||''}</div></td>
-      <td><span class="anchor-tag">${l.anchorText||''}</span></td>
-      <td><div style="font-size:12px">${l.targetTitle||''}</div><div style="font-family:'DM Mono',monospace;font-size:10.5px;color:var(--text3)">${l.targetUrl||''}</div></td>
-      <td><span class="pill ${priClass}">${l.priority||''}</span></td>
-      <td><div style="font-size:12px">${l.placement||''}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${l.reason||''}</div></td>
-    </tr>`;
-  }).join('');
-
-  document.getElementById('internalResult').classList.add('show');
-}
-
-// ============================
-// EXPORT CSV
-// ============================
 function exportCSV() {
   if (!allLinks.length) return;
   const rows = [['Source URL','Source Title','Anchor Text','Target URL','Target Title','Priority','Placement','Reason']];
-  allLinks.forEach(l => rows.push([l.sourceUrl,l.sourceTitle,l.anchorText,l.targetUrl,l.targetTitle,l.priority,l.placement,l.reason]));
-  const csv = rows.map(r => r.map(v => `"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob = new Blob([csv], {type:'text/csv'});
+  allLinks.forEach(l=>rows.push([l.sourceUrl,l.sourceTitle,l.anchorText,l.targetUrl,l.targetTitle,l.priority,l.placement,l.reason]));
+  const csv = rows.map(r=>r.map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'internal-links.csv';
-  a.click();
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = 'internal-links.csv'; a.click();
 }
 </script>
 </body>
