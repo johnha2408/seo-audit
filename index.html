@@ -35,7 +35,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .logo-mark{width:28px;height:28px;background:var(--accent);border-radius:7px;display:grid;place-items:center}
 .logo-mark svg{fill:var(--accent-fg);width:14px;height:14px}
 .topbar-r{display:flex;align-items:center;gap:10px}
-.api-badge{font-size:11px;padding:4px 10px;border-radius:99px;cursor:pointer;border:1px solid var(--red-border);background:var(--red-bg);color:var(--red);font-family:'DM Mono',monospace;transition:all .15s}
+.api-badge{font-size:11px;padding:4px 10px;border-radius:99px;cursor:pointer;border:1px solid var(--red-border);background:var(--red-bg);color:var(--red);font-family:DM Mono,monospace;transition:all .15s}
 .api-badge.ok{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
 .icon-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:var(--rs);background:var(--surface2);cursor:pointer;display:grid;place-items:center;font-size:14px;transition:border-color .15s}
 .icon-btn:hover{border-color:var(--border2)}
@@ -45,13 +45,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 
 /* SIDEBAR */
 .sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;transition:width .2s}
-.sidebar-section{padding:12px 14px 6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase}
+.sidebar-section{padding:12px 14px 6px;font-family:DM Mono,monospace;font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase}
 .sidebar-item{display:flex;align-items:center;gap:9px;padding:8px 14px;cursor:pointer;font-size:12.5px;color:var(--text2);transition:all .12s;border-left:2px solid transparent}
 .sidebar-item:hover{background:var(--surface2);color:var(--text)}
 .sidebar-item.active{color:var(--text);background:var(--surface2);border-left-color:var(--accent);font-weight:500}
 .sidebar-item svg{width:14px;height:14px;flex-shrink:0;opacity:.6}
 .sidebar-item.active svg{opacity:1}
-.sidebar-foot{margin-top:auto;padding:12px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+.sidebar-foot{margin-top:auto;padding:12px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);font-family:DM Mono,monospace}
 .model-chip{display:inline-block;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:10px;margin-top:4px;color:var(--text2)}
 
 /* CHAT AREA */
@@ -91,7 +91,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .msg-bubble strong{font-weight:500}
 .msg-bubble ul,.msg-bubble ol{padding-left:16px;margin:5px 0}
 .msg-bubble li{margin-bottom:3px}
-.msg-bubble code{font-family:'DM Mono',monospace;font-size:11.5px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 5px}
+.msg-bubble code{font-family:DM Mono,monospace;font-size:11.5px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 5px}
 .msg-bubble pre{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;overflow-x:auto;margin:8px 0}
 .msg-bubble pre code{background:none;border:none;padding:0;font-size:11px}
 .msg-bubble a{color:var(--blue);text-decoration:none}
@@ -101,7 +101,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .result-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(60px,1fr));gap:6px;margin:10px 0}
 .rs-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:9px 8px;text-align:center}
 .rs-n{font-family:'Syne',sans-serif;font-size:19px;font-weight:700}
-.rs-l{font-size:9.5px;color:var(--text2);margin-top:1px;font-family:'DM Mono',monospace;letter-spacing:.03em}
+.rs-l{font-size:9.5px;color:var(--text2);margin-top:1px;font-family:DM Mono,monospace;letter-spacing:.03em}
 .rs-red .rs-n{color:var(--red)}
 .rs-green .rs-n{color:var(--green)}
 .rs-amber .rs-n{color:var(--amber)}
@@ -113,7 +113,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .c-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .c-name{font-family:'Syne',sans-serif;font-size:12.5px;font-weight:600;flex:1}
 .c-badges{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
-.pill{font-size:10px;padding:3px 8px;border-radius:6px;font-family:'DM Mono',monospace;font-weight:500;white-space:nowrap;flex-shrink:0;display:inline-block;line-height:1.3}
+.pill{font-size:10px;padding:3px 8px;border-radius:6px;font-family:DM Mono,monospace;font-weight:500;white-space:nowrap;flex-shrink:0;display:inline-block;line-height:1.3}
 .p-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
 .p-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
 .p-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
@@ -123,16 +123,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .chev.open{transform:rotate(90deg)}
 .cluster-body{display:none;padding:10px 12px;border-top:1px solid var(--border);background:var(--surface)}
 .cluster-body.open{display:block}
-.sec-lbl{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin:9px 0 5px}
+.sec-lbl{font-family:DM Mono,monospace;font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin:9px 0 5px}
 .sec-lbl:first-child{margin-top:0}
-.pillar-row{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:var(--rs);font-family:'DM Mono',monospace;font-size:11px}
+.pillar-row{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:var(--rs);font-family:DM Mono,monospace;font-size:11px}
 .pr-ok{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
 .pr-miss{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
 .art-list{display:flex;flex-direction:column;gap:5px}
 .art-row{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--rs);background:var(--surface)}
 .art-info{flex:1;min-width:0}
 .art-title{font-size:12.5px;line-height:1.4;color:var(--text)}
-.art-slug{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px}
+.art-slug{font-family:DM Mono,monospace;font-size:10px;color:var(--text3);margin-top:2px}
 .art-wc{font-size:10px;color:var(--text3);margin-top:1px}
 
 .error-row{display:flex;gap:9px;padding:9px 11px;border:1px solid var(--border);border-radius:var(--rs);margin:4px 0;background:var(--bg)}
@@ -143,14 +143,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .e-ok .e-icon{background:var(--green-bg);color:var(--green)}
 .e-title{font-size:12px;font-weight:500;margin-bottom:2px}
 .e-desc{font-size:11px;color:var(--text2);line-height:1.5}
-.e-fix{font-size:10.5px;color:var(--blue);font-family:'DM Mono',monospace;margin-top:3px}
+.e-fix{font-size:10.5px;color:var(--blue);font-family:DM Mono,monospace;margin-top:3px}
 
 .link-tbl{width:100%;border-collapse:collapse;font-size:11px;margin:8px 0}
-.link-tbl th{text-align:left;padding:6px 9px;background:var(--surface2);font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.link-tbl th{text-align:left;padding:6px 9px;background:var(--surface2);font-family:DM Mono,monospace;font-size:9px;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border)}
 .link-tbl td{padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:top}
 .link-tbl tr:last-child td{border-bottom:none}
 .link-tbl tr:hover td{background:var(--surface2)}
-.anchor{display:inline-block;background:var(--blue-bg);color:var(--blue);border-radius:3px;padding:1px 6px;font-family:'DM Mono',monospace;font-size:9.5px;border:1px solid var(--blue-border)}
+.anchor{display:inline-block;background:var(--blue-bg);color:var(--blue);border-radius:3px;padding:1px 6px;font-family:DM Mono,monospace;font-size:9.5px;border:1px solid var(--blue-border)}
 
 /* TYPING */
 .typing-dot{display:inline-flex;gap:4px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);border-bottom-left-radius:4px;box-shadow:var(--shadow)}
@@ -169,7 +169,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .send-btn:hover{opacity:.85}
 .send-btn:disabled{opacity:.35;cursor:not-allowed}
 .send-btn svg{width:15px;height:15px;fill:currentColor}
-.input-hint{text-align:center;font-size:11px;color:var(--text3);margin-top:7px;font-family:'DM Mono',monospace}
+.input-hint{text-align:center;font-size:11px;color:var(--text3);margin-top:7px;font-family:DM Mono,monospace}
 
 /* MODAL */
 .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
@@ -178,9 +178,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .modal h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:600;margin-bottom:5px}
 .modal p{font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6}
 .m-label{font-size:11px;font-weight:500;margin-bottom:5px;color:var(--text2)}
-.m-input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--rs);background:var(--surface2);color:var(--text);font-size:12.5px;font-family:'DM Mono',monospace;outline:none;margin-bottom:12px;transition:border-color .15s}
+.m-input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--rs);background:var(--surface2);color:var(--text);font-size:12.5px;font-family:DM Mono,monospace;outline:none;margin-bottom:12px;transition:border-color .15s}
 .m-input:focus{border-color:var(--border2)}
-.m-select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--rs);background:var(--surface2);color:var(--text);font-size:12.5px;outline:none;margin-bottom:16px;font-family:'DM Mono',monospace}
+.m-select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--rs);background:var(--surface2);color:var(--text);font-size:12.5px;outline:none;margin-bottom:16px;font-family:DM Mono,monospace}
 .m-row{display:flex;gap:8px;justify-content:flex-end}
 .btn{padding:8px 16px;border-radius:var(--rs);border:none;font-size:12.5px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
 .btn-primary{background:var(--accent);color:var(--accent-fg)}
@@ -215,7 +215,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
   .input-bar > .input-wrap { max-width: 800px; }
 }
 .menu-btn { display: none; }
-.copy-btn{font-size:10px;padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s}
+.copy-btn{font-size:10px;padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-family:DM Mono,monospace;transition:all .15s}
 .copy-btn:hover{border-color:var(--border2);color:var(--text)}
 
 /* SAVED PANEL */
@@ -232,14 +232,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .saved-item-icon{font-size:14px;flex-shrink:0;margin-top:1px}
 .saved-item-meta{flex:1;min-width:0}
 .saved-item-name{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.saved-item-date{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px}
+.saved-item-date{font-size:10px;color:var(--text3);font-family:DM Mono,monospace;margin-top:2px}
 .saved-item-del{width:22px;height:22px;border:1px solid var(--border);border-radius:4px;background:transparent;cursor:pointer;display:grid;place-items:center;font-size:10px;color:var(--text3);flex-shrink:0;transition:all .12s}
 .saved-item-del:hover{background:var(--red-bg);border-color:var(--red);color:var(--red)}
-.save-btn{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-family:'DM Mono',monospace;margin-top:10px;transition:all .15s}
+.save-btn{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-family:DM Mono,monospace;margin-top:10px;transition:all .15s}
 .save-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-bg)}
 .save-btn.saved-ok{border-color:var(--green);color:var(--green);background:var(--green-bg)}
 .saved-toggle{position:relative}
-.saved-count{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--red);color:#fff;border-radius:50%;font-size:9px;display:none;align-items:center;justify-content:center;font-family:'DM Mono',monospace}
+.saved-count{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--red);color:#fff;border-radius:50%;font-size:9px;display:none;align-items:center;justify-content:center;font-family:DM Mono,monospace}
 .saved-count.show{display:flex}
 </style>
 </head>
@@ -764,7 +764,7 @@ function renderClusters(data) {
           </span></td>
           <td><span class="pill ${a.priority==='high'?'p-red':a.priority==='medium'?'p-amber':'p-blue'}">${a.priority}</span></td>
           <td style="font-size:12.5px;font-weight:500;user-select:text">${a.title}</td>
-          <td style="font-family:'DM Mono',monospace;font-size:10.5px;color:var(--text3);user-select:text">${a.slug}</td>
+          <td style="font-family:DM Mono,monospace;font-size:10.5px;color:var(--text3);user-select:text">${a.slug}</td>
           <td style="font-size:11px;color:var(--text3)">${a.wordCount||''}</td>
         </tr>`).join('')}</tbody>
       </table>
@@ -773,7 +773,7 @@ function renderClusters(data) {
 
   // Cluster accordion — pillar + tags only
   const acc = document.createElement('div');
-  acc.innerHTML = `<div style="font-size:10px;color:var(--text3);margin:14px 0 7px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.07em">Cluster Details</div>
+  acc.innerHTML = `<div style="font-size:10px;color:var(--text3);margin:14px 0 7px;font-family:DM Mono,monospace;text-transform:uppercase;letter-spacing:.07em">Cluster Details</div>
   ${clusters.map(c => {
     const sp = c.status==='critical'?'<span class="pill p-red">Critical</span>':!c.hasPillar?'<span class="pill p-amber">No Pillar</span>':'<span class="pill p-green">OK</span>';
     const tags = (c.tags||[]).map(t=>`<span class="pill p-blue">${t}</span>`).join(' ');
@@ -819,7 +819,7 @@ function renderAudit(data) {
   // Top bar with save button
   const topBar = document.createElement('div');
   topBar.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:8px';
-  topBar.innerHTML = '<div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace">Onpage Audit</div>';
+  topBar.innerHTML = '<div style="font-size:11px;color:var(--text3);font-family:DM Mono,monospace">Onpage Audit</div>';
   const saveBtn = document.createElement('button');
   saveBtn.className = 'save-btn';
   saveBtn.innerHTML = '&#128190; Save Result';
@@ -894,9 +894,9 @@ function renderLinks(data) {
   const targetDiv = document.createElement('div');
   targetDiv.style.cssText = 'background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:10px 13px;margin-bottom:12px';
   targetDiv.innerHTML = `
-    <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Target Page</div>
+    <div style="font-size:10px;color:var(--text3);font-family:DM Mono,monospace;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Target Page</div>
     <div style="font-size:13px;font-weight:500">${data.targetTitle || 'Target Page'}</div>
-    <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px">${data.targetUrl || ''}</div>
+    <div style="font-size:11px;color:var(--text3);font-family:DM Mono,monospace;margin-top:2px">${data.targetUrl || ''}</div>
     ${data.targetKeyword ? `<div style="margin-top:6px"><span class="pill p-blue">${data.targetKeyword}</span></div>` : ''}`;
   wrap.appendChild(targetDiv);
 
@@ -920,18 +920,18 @@ function renderLinks(data) {
       <div style="background:var(--green-bg);padding:8px 12px;display:flex;align-items:center;gap:8px">
         <span style="font-size:12px">🏛</span>
         <div style="flex:1">
-          <div style="font-size:11px;color:var(--green);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em">Pillar Page</div>
+          <div style="font-size:11px;color:var(--green);font-family:DM Mono,monospace;text-transform:uppercase;letter-spacing:.06em">Pillar Page</div>
           <div style="font-size:12.5px;font-weight:500;color:var(--text)">${pillar.title||''}</div>
-          <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace">${pillar.url||''}</div>
+          <div style="font-size:10px;color:var(--text3);font-family:DM Mono,monospace">${pillar.url||''}</div>
         </div>
         <span class="pill p-green">high</span>
       </div>
       <div style="padding:10px 12px;background:var(--surface)">
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'DM Mono',monospace;letter-spacing:.06em;margin-bottom:5px">Anchor Text</div>
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:DM Mono,monospace;letter-spacing:.06em;margin-bottom:5px">Anchor Text</div>
         <span class="anchor">${pillar.anchorText||''}</span>
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'DM Mono',monospace;letter-spacing:.06em;margin:8px 0 4px">Placement</div>
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:DM Mono,monospace;letter-spacing:.06em;margin:8px 0 4px">Placement</div>
         <div style="font-size:12px;color:var(--text)">${pillar.placement||''}</div>
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'DM Mono',monospace;letter-spacing:.06em;margin:8px 0 4px">Why</div>
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:DM Mono,monospace;letter-spacing:.06em;margin:8px 0 4px">Why</div>
         <div style="font-size:11.5px;color:var(--text2)">${pillar.reason||''}</div>
       </div>`;
     wrap.appendChild(pillarDiv);
@@ -959,7 +959,7 @@ function renderLinks(data) {
       <div style="background:var(--surface2);padding:8px 12px;display:flex;align-items:flex-start;gap:8px">
         <div style="flex:1;min-width:0">
           <div style="font-size:12.5px;font-weight:500">${l.sourceTitle||''}</div>
-          <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:1px">${(l.sourceUrl||'').replace(/https?:\/\/[^/]+/,'')}</div>
+          <div style="font-size:10px;color:var(--text3);font-family:DM Mono,monospace;margin-top:1px">${(l.sourceUrl||'').replace(/https?:\/\/[^/]+/,'')}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex-shrink:0">
           <span class="pill ${priClass}">${l.priority}</span>
@@ -969,7 +969,7 @@ function renderLinks(data) {
       <div style="padding:10px 12px;background:var(--surface)">
         <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px">
           <div>
-            <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'DM Mono',monospace;letter-spacing:.06em;margin-bottom:4px">Anchor Text</div>
+            <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:DM Mono,monospace;letter-spacing:.06em;margin-bottom:4px">Anchor Text</div>
             <span class="anchor">${l.anchorText||''}</span>
           </div>
         </div>
