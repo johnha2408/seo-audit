@@ -372,7 +372,7 @@ async function callAI(sys, user) {
   const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method:'POST',
     headers:{'Authorization':'Bearer '+apiKey,'Content-Type':'application/json','HTTP-Referer':location.href,'X-Title':'SEO Lens'},
-    body:JSON.stringify({model, messages:[{role:'system',content:sys},{role:'user',content:user}], max_tokens:4000})
+    body:JSON.stringify({model, messages:[{role:'system',content:sys},{role:'user',content:user}], max_tokens:6000})
   });
   if (!r.ok) throw new Error('AI error ' + r.status + ': ' + await r.text());
   const j = await r.json();
@@ -451,6 +451,12 @@ async function analyseUrls(urlList, originUrl) {
   cachedUrls = urlList;
   if (originUrl) document.getElementById('internalUrl').value = originUrl;
 
+  // Limit to 150 URLs to avoid token overflow
+  if (urlList.length > 150) {
+    log('sitemapLog', `Có ${urlList.length} URLs — giới hạn 150 để tránh token overflow...`);
+    urlList = urlList.slice(0, 150);
+  }
+
   const sys = `You are an expert SEO strategist. Analyse URL list and classify into topic clusters.
 Return ONLY valid JSON (no markdown, no explanation):
 {
@@ -474,8 +480,18 @@ Rules: group by topic, identify pillars (broad service/landing pages), mark "cri
   log('sitemapLog', 'AI done. Rendering...');
 
   let data;
-  try { data = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
-  catch(e) { throw new Error('AI returned invalid JSON. Thử lại.'); }
+  try {
+    // Strip markdown, find first { to last }
+    let clean = raw.replace(/```json|```/g,'').trim();
+    const start = clean.indexOf('{');
+    const end = clean.lastIndexOf('}');
+    if (start !== -1 && end !== -1) clean = clean.slice(start, end+1);
+    data = JSON.parse(clean);
+  } catch(e) {
+    log('sitemapLog', 'Parse error: ' + e.message);
+    log('sitemapLog', 'Raw (500 chars): ' + raw.substring(0,500));
+    throw new Error('JSON parse failed — xem log bên dưới');
+  }
 
   allClusters = data.clusters || [];
   const s = data.summary || {};
@@ -557,8 +573,12 @@ Check 25+ points: title (50-60 chars, keyword first), meta desc (150-160 chars),
 Return ONLY JSON.`;
     const result = await callAI(sys, `URL: ${url}\n\nHTML:\n${html.substring(0,12000)}`);
     let data;
-    try { data = JSON.parse(result.replace(/```json|```/g,'').trim()); }
-    catch(e) { throw new Error('AI returned invalid JSON'); }
+    try {
+      let clean = result.replace(/```json|```/g,'').trim();
+      const s = clean.indexOf('{'), e2 = clean.lastIndexOf('}');
+      if (s!==-1&&e2!==-1) clean = clean.slice(s,e2+1);
+      data = JSON.parse(clean);
+    } catch(e) { log('onpageLog','Parse error: '+e.message+' | Raw: '+result.substring(0,300)); throw new Error('JSON parse failed'); }
     allErrors = data.checks || [];
     const s = data.summary || {};
     const sc = data.score || 0;
@@ -635,8 +655,12 @@ Return ONLY valid JSON:
 Rules: pillar↔cluster = high priority, cluster→cluster = medium, max 80 links, anchor text 2-5 words natural keyword-rich. Return ONLY JSON.`;
     const result = await callAI(sys, `URLs:\n${urls.join('\n')}`);
     let data;
-    try { data = JSON.parse(result.replace(/```json|```/g,'').trim()); }
-    catch(e) { throw new Error('AI returned invalid JSON'); }
+    try {
+      let clean = result.replace(/```json|```/g,'').trim();
+      const s = clean.indexOf('{'), e2 = clean.lastIndexOf('}');
+      if (s!==-1&&e2!==-1) clean = clean.slice(s,e2+1);
+      data = JSON.parse(clean);
+    } catch(e) { log('onpageLog','Parse error: '+e.message+' | Raw: '+result.substring(0,300)); throw new Error('JSON parse failed'); }
     allLinks = data.links || [];
     const s = data.summary || {};
     document.getElementById('internalStats').innerHTML = `
