@@ -217,6 +217,30 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .menu-btn { display: none; }
 .copy-btn{font-size:10px;padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s}
 .copy-btn:hover{border-color:var(--border2);color:var(--text)}
+
+/* SAVED PANEL */
+.saved-panel{position:fixed;right:0;top:52px;bottom:0;width:280px;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease;z-index:40;box-shadow:-4px 0 20px rgba(0,0,0,.08)}
+.saved-panel.open{transform:translateX(0)}
+.saved-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.saved-hdr-title{font-family:'Syne',sans-serif;font-weight:600;font-size:13px}
+.saved-close{width:26px;height:26px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);cursor:pointer;display:grid;place-items:center;font-size:12px}
+.saved-list{flex:1;overflow-y:auto;padding:10px}
+.saved-empty{text-align:center;padding:32px 16px;color:var(--text3);font-size:12px}
+.saved-item{border:1px solid var(--border);border-radius:var(--rs);margin-bottom:8px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.saved-item:hover{border-color:var(--border2)}
+.saved-item-hdr{padding:9px 11px;display:flex;align-items:flex-start;gap:8px}
+.saved-item-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.saved-item-meta{flex:1;min-width:0}
+.saved-item-name{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.saved-item-date{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px}
+.saved-item-del{width:22px;height:22px;border:1px solid var(--border);border-radius:4px;background:transparent;cursor:pointer;display:grid;place-items:center;font-size:10px;color:var(--text3);flex-shrink:0;transition:all .12s}
+.saved-item-del:hover{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.save-btn{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;padding:4px 10px;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-family:'DM Mono',monospace;margin-top:10px;transition:all .15s}
+.save-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+.save-btn.saved-ok{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+.saved-toggle{position:relative}
+.saved-count{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--red);color:#fff;border-radius:50%;font-size:9px;display:none;align-items:center;justify-content:center;font-family:'DM Mono',monospace}
+.saved-count.show{display:flex}
 </style>
 </head>
 <body>
@@ -252,6 +276,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
     <span class="api-badge" id="apiBadge" onclick="openModal()">No API Key</span>
     <button class="icon-btn menu-btn" onclick="toggleSidebar()" title="Menu" style="font-size:13px">☰</button>
     <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">☀</button>
+    <button class="icon-btn saved-toggle" onclick="toggleSaved()" title="Saved results" id="savedToggleBtn" style="font-size:12px">
+      🗂
+      <span class="saved-count" id="savedCount">0</span>
+    </button>
     <button class="icon-btn" onclick="clearChat()" title="New chat" style="font-size:12px">✕</button>
   </div>
 </header>
@@ -638,6 +666,7 @@ function renderClusters(data) {
   const allNew = clusters.flatMap(c=>(c.newArticles||[]).map(a=>({...a,cluster:c.name,color:c.color||'#888'})));
   const totalNew = allNew.length;
   window._lastArtData = allNew;
+  window._lastClusterFull = data;
 
   // Stats row
   const stats = document.createElement('div');
@@ -649,6 +678,15 @@ function renderClusters(data) {
     <div class="rs-box rs-red"><div class="rs-n">${s.orphans||0}</div><div class="rs-l">Orphans</div></div>
     <div class="rs-box rs-amber"><div class="rs-n">${totalNew}</div><div class="rs-l">New Articles</div></div>`;
   wrap.appendChild(stats);
+
+  // Save button
+  const saveId = 'save_' + Date.now();
+  const saveBtnDiv = document.createElement('div');
+  saveBtnDiv.style.cssText = 'display:flex;align-items:center;gap:8px;margin:6px 0 4px';
+  saveBtnDiv.innerHTML = `<button class="save-btn" id="${saveId}" onclick="handleSave('${saveId}','clusters',event)">💾 Save Result</button>`;
+  saveBtnDiv._jsonData = data;
+  wrap.appendChild(saveBtnDiv);
+  wrap._saveData = {id: saveId, type:'clusters', data};
 
   // Master copyable table
   const tbl = document.createElement('div');
@@ -725,7 +763,12 @@ function renderAudit(data) {
   const scCls = sc>=80?'rs-green':sc>=60?'rs-amber':'rs-red';
   const checks = data.checks || [];
 
+  const auditSaveId = 'save_' + Date.now();
   wrap.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace">Onpage Audit</div>
+      <button class="save-btn" id="${auditSaveId}" onclick="handleSave('${auditSaveId}','audit',event)">💾 Save Result</button>
+    </div>
     <div class="result-stats">
       <div class="rs-box ${scCls}"><div class="rs-n">${sc}</div><div class="rs-l">SEO Score</div></div>
       <div class="rs-box rs-red"><div class="rs-n">${s.critical||0}</div><div class="rs-l">Critical</div></div>
@@ -753,11 +796,19 @@ function renderLinks(data) {
   const s = data.summary || {};
   const links = data.links || [];
 
+  const linkSaveId = 'save_' + Date.now();
   const exportBtn = document.createElement('button');
   exportBtn.className = 'btn btn-secondary btn-sm';
   exportBtn.style.cssText = 'margin-bottom:8px;font-size:11px';
   exportBtn.textContent = '↓ Export CSV';
   exportBtn.onclick = () => exportLinksCSV(links);
+  const saveLinkBtn = document.createElement('button');
+  saveLinkBtn.className = 'save-btn';
+  saveLinkBtn.id = linkSaveId;
+  saveLinkBtn.style.marginBottom = '8px';
+  saveLinkBtn.textContent = '💾 Save Result';
+  saveLinkBtn.onclick = (e) => handleSave(linkSaveId, 'links', e);
+  window._lastLinksData = data;
 
   wrap.innerHTML = `
     <div class="result-stats">
@@ -766,7 +817,11 @@ function renderLinks(data) {
       <div class="rs-box rs-blue"><div class="rs-n">${s.clustersLinked||0}</div><div class="rs-l">Cluster</div></div>
       <div class="rs-box rs-red"><div class="rs-n">${links.filter(l=>l.priority==='high').length}</div><div class="rs-l">High pri</div></div>
     </div>`;
-  wrap.appendChild(exportBtn);
+  const linkBtnRow = document.createElement('div');
+  linkBtnRow.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px';
+  linkBtnRow.appendChild(exportBtn);
+  linkBtnRow.appendChild(saveLinkBtn);
+  wrap.appendChild(linkBtnRow);
 
   const tbl = document.createElement('div');
   tbl.style.overflowX = 'auto';
@@ -831,6 +886,145 @@ function setLoading(on) {
 function toggleSidebar() {
   document.querySelector('.sidebar').classList.toggle('open');
 }
+
+// =====================
+// SAVED RESULTS
+// =====================
+const SAVE_KEY = 'seolens_saved';
+
+function getSaved() {
+  try { return JSON.parse(localStorage.getItem(SAVE_KEY) || '[]'); } catch(e) { return []; }
+}
+function setSaved(items) {
+  localStorage.setItem(SAVE_KEY, JSON.stringify(items));
+  renderSavedList();
+  updateSavedCount();
+}
+function updateSavedCount() {
+  const n = getSaved().length;
+  const el = document.getElementById('savedCount');
+  el.textContent = n;
+  el.className = 'saved-count' + (n > 0 ? ' show' : '');
+}
+function toggleSaved() {
+  document.getElementById('savedPanel').classList.toggle('open');
+  renderSavedList();
+}
+function closeSaved() {
+  document.getElementById('savedPanel').classList.remove('open');
+}
+
+function saveResult(id, name, type, jsonData) {
+  const items = getSaved();
+  const existing = items.findIndex(i => i.id === id);
+  const entry = {
+    id,
+    name,
+    type,
+    data: jsonData,
+    savedAt: new Date().toISOString()
+  };
+  if (existing >= 0) items[existing] = entry;
+  else items.unshift(entry);
+  setSaved(items);
+}
+
+function deleteResult(id, e) {
+  e.stopPropagation();
+  const items = getSaved().filter(i => i.id !== id);
+  setSaved(items);
+}
+
+function loadResult(id) {
+  const items = getSaved();
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  closeSaved();
+  // Hide welcome
+  const w = document.getElementById('welcome');
+  if (w) w.style.display = 'none';
+  // Render into chat
+  const msgs = document.getElementById('messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row assistant';
+  const av = document.createElement('div');
+  av.className = 'msg-avatar av-ai';
+  av.textContent = 'S';
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  const label = document.createElement('div');
+  label.style.cssText = 'font-size:11px;color:var(--text3);margin-bottom:8px;font-family:"DM Mono",monospace';
+  label.textContent = '📂 Loaded: ' + item.name;
+  bubble.appendChild(label);
+  let widget;
+  if (item.type === 'clusters') widget = renderClusters(item.data);
+  else if (item.type === 'audit') widget = renderAudit(item.data);
+  else if (item.type === 'links') widget = renderLinks(item.data);
+  if (widget) bubble.appendChild(widget);
+  row.appendChild(av);
+  row.appendChild(bubble);
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function renderSavedList() {
+  const list = document.getElementById('savedList');
+  const items = getSaved();
+  if (!items.length) {
+    list.innerHTML = '<div class="saved-empty">No saved results yet.<br><br>Click "Save Result" after any analysis.</div>';
+    return;
+  }
+  const icons = { clusters: '🗺️', audit: '🔍', links: '🔗' };
+  list.innerHTML = items.map(item => {
+    const date = new Date(item.savedAt).toLocaleDateString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    return `<div class="saved-item" onclick="loadResult('${item.id}')">
+      <div class="saved-item-hdr">
+        <div class="saved-item-icon">${icons[item.type]||'📄'}</div>
+        <div class="saved-item-meta">
+          <div class="saved-item-name">${item.name}</div>
+          <div class="saved-item-date">${date}</div>
+        </div>
+        <button class="saved-item-del" onclick="deleteResult('${item.id}',event)" title="Delete">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Init saved count on load
+window.addEventListener('load', () => {
+  updateSavedCount();
+});
+
+
+function handleSave(btnId, type, e) {
+  e.stopPropagation();
+  const btn = document.getElementById(btnId);
+  let data, name;
+  if (type === 'clusters') {
+    data = window._lastArtData ? { summary: window._lastClusterSummary, clusters: window._lastClusters } : null;
+    data = window._lastClusterFull || null;
+    name = 'Sitemap Clusters — ' + (data && data.summary ? data.summary.total + ' URLs' : new Date().toLocaleDateString());
+  } else if (type === 'audit') {
+    data = window._lastAuditData || null;
+    name = 'Onpage Audit — Score ' + (data ? data.score : '');
+  } else if (type === 'links') {
+    data = window._lastLinksData || null;
+    name = 'Internal Links — ' + (data && data.links ? data.links.length + ' links' : '');
+  }
+  if (!data) { alert('No data to save'); return; }
+  const id = 'result_' + Date.now();
+  saveResult(id, name, type, data);
+  if (btn) { btn.textContent = '✓ Saved!'; btn.classList.add('saved-ok'); setTimeout(()=>{btn.textContent='💾 Save Result';btn.classList.remove('saved-ok')},2000); }
+}
+
 </script>
+
+<div class="saved-panel" id="savedPanel">
+  <div class="saved-hdr">
+    <div class="saved-hdr-title">Saved Results</div>
+    <button class="saved-close" onclick="toggleSaved()">✕</button>
+  </div>
+  <div class="saved-list" id="savedList"></div>
+</div>
 </body>
 </html>
