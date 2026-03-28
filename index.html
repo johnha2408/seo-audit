@@ -442,7 +442,7 @@ function quickAsk(type) {
   const prompts = {
     sitemap: 'Paste your sitemap URL and I will analyse the full pillar/cluster structure.',
     onpage: 'Paste the URL you want to audit — I will check 25+ SEO factors.',
-    internal: 'Paste your sitemap URL — I will build an internal link table with anchor text and placement.'
+    internal: 'To build internal links, I need two things:\n1. Your sitemap URL\n2. The specific page URL you want to build links TO\n\nExample: sitemap: https://example.com/sitemap.xml | target: https://example.com/blog/your-post/'
   };
   addMessage('assistant', prompts[type]);
 }
@@ -500,8 +500,48 @@ async function prepareContext(userMsg) {
     }
   }
 
-  // Sitemap analysis or internal links
-  if (wantSitemap || wantInternal || isSitemapUrl(url)) {
+  // Internal links — detect sitemap + target pattern
+  if (wantInternal) {
+    // Parse "sitemap: X | target: Y" or "sitemap X target Y"
+    const sitemapMatch = userMsg.match(/sitemap[:\s]+([^|\s]+)/i);
+    const targetMatch = userMsg.match(/target[:\s]+([^|\s]+)/i);
+    const sitemapUrl2 = sitemapMatch ? sitemapMatch[1].trim() : (isSitemapUrl(url) ? url : null);
+    const targetUrl2 = targetMatch ? targetMatch[1].trim() : (!isSitemapUrl(url) ? url : null);
+
+    if (sitemapUrl2 && targetUrl2) {
+      try {
+        let xml = await proxyFetch(sitemapUrl2);
+        let urls = parseUrls(xml);
+        if (xml.includes('<sitemapindex')) {
+          const children = parseUrls(xml);
+          urls = [];
+          for (const cu of children.slice(0,8)) {
+            try { urls.push(...parseUrls(await proxyFetch(cu))); } catch(e) {}
+          }
+          urls = [...new Set(urls)];
+        }
+        // Filter to most relevant URLs (exclude target itself, limit to 80)
+        const filteredUrls = urls.filter(u => u !== targetUrl2).slice(0, 80);
+        return userMsg + `\n\n[TARGET PAGE]: ${targetUrl2}\n[SITEMAP URLS - ${filteredUrls.length} pages to find incoming links from]:\n${filteredUrls.join('\n')}`;
+      } catch(e) {
+        return userMsg + `\n\n[TARGET PAGE]: ${targetUrl2}\n[Could not fetch sitemap: ${e.message}]`;
+      }
+    }
+
+    // Fallback: just sitemap
+    if (sitemapUrl2) {
+      try {
+        let xml = await proxyFetch(sitemapUrl2);
+        let urls = parseUrls(xml).slice(0, 80);
+        return userMsg + `\n\n[FETCHED ${urls.length} URLs from sitemap]:\n${urls.join('\n')}\n\n[NOTE: No target page specified. Ask user for the specific page they want to build links to.]`;
+      } catch(e) {
+        return userMsg + `\n\n[Could not fetch sitemap: ${e.message}]`;
+      }
+    }
+  }
+
+  // Sitemap analysis (clusters)
+  if (wantSitemap || isSitemapUrl(url)) {
     try {
       let xml = await proxyFetch(url);
       let urls = parseUrls(xml);
@@ -516,7 +556,7 @@ async function prepareContext(userMsg) {
       cachedUrls = urls.slice(0, 150);
       return userMsg + `\n\n[FETCHED ${cachedUrls.length} URLs from sitemap ${url}]:\n${cachedUrls.join('\n')}`;
     } catch(e) {
-      return userMsg + `\n\n[Proxy bị block khi fetch ${url}: ${e.message}. Phân tích dựa trên URL pattern thôi.]`;
+      return userMsg + `\n\n[Proxy blocked for ${url}: ${e.message}. Analysing based on URL patterns only.]`;
     }
   }
 
@@ -683,10 +723,22 @@ function renderClusters(data) {
   const saveId = 'save_' + Date.now();
   const saveBtnDiv = document.createElement('div');
   saveBtnDiv.style.cssText = 'display:flex;align-items:center;gap:8px;margin:6px 0 4px';
-  saveBtnDiv.innerHTML = `<button class="save-btn" id="${saveId}" onclick="handleSave('${saveId}','clusters',event)">💾 Save Result</button>`;
-  saveBtnDiv._jsonData = data;
+  const clusterSaveBtn = document.createElement('button');
+  clusterSaveBtn.className = 'save-btn';
+  clusterSaveBtn.innerHTML = '&#128190; Save Result';
+  clusterSaveBtn.onclick = (e) => {
+    e.stopPropagation();
+    const d = window._lastClusterFull;
+    if (!d) { alert('No data to save'); return; }
+    const id = 'result_' + Date.now();
+    const name = 'Sitemap Clusters — ' + ((d.summary && d.summary.total) ? d.summary.total + ' URLs' : new Date().toLocaleDateString());
+    saveResult(id, name, 'clusters', d);
+    clusterSaveBtn.innerHTML = '&#10003; Saved!';
+    clusterSaveBtn.classList.add('saved-ok');
+    setTimeout(() => { clusterSaveBtn.innerHTML = '&#128190; Save Result'; clusterSaveBtn.classList.remove('saved-ok'); }, 2000);
+  };
+  saveBtnDiv.appendChild(clusterSaveBtn);
   wrap.appendChild(saveBtnDiv);
-  wrap._saveData = {id: saveId, type:'clusters', data};
 
   // Master copyable table
   const tbl = document.createElement('div');
@@ -757,94 +809,184 @@ function copyArt(type) {
 }
 
 function renderAudit(data) {
+  window._lastAuditData = data;
   const wrap = document.createElement('div');
   const s = data.summary || {};
   const sc = data.score || 0;
   const scCls = sc>=80?'rs-green':sc>=60?'rs-amber':'rs-red';
   const checks = data.checks || [];
 
-  const auditSaveId = 'save_' + Date.now();
-  wrap.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-      <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace">Onpage Audit</div>
-      <button class="save-btn" id="${auditSaveId}" onclick="handleSave('${auditSaveId}','audit',event)">💾 Save Result</button>
-    </div>
-    <div class="result-stats">
-      <div class="rs-box ${scCls}"><div class="rs-n">${sc}</div><div class="rs-l">SEO Score</div></div>
-      <div class="rs-box rs-red"><div class="rs-n">${s.critical||0}</div><div class="rs-l">Critical</div></div>
-      <div class="rs-box rs-amber"><div class="rs-n">${s.warning||0}</div><div class="rs-l">Warning</div></div>
-      <div class="rs-box rs-blue"><div class="rs-n">${s.info||0}</div><div class="rs-l">Info</div></div>
-      <div class="rs-box rs-green"><div class="rs-n">${s.passed||0}</div><div class="rs-l">Passed</div></div>
-    </div>
-    ${checks.map(e=>{
-      const cls=e.severity==='high'?'e-h':e.severity==='medium'?'e-m':e.severity==='low'?'e-l':'e-ok';
-      const icon=e.severity==='high'?'!':e.severity==='medium'?'~':e.severity==='low'?'i':'✓';
-      return `<div class="error-row ${cls}">
-        <div class="e-icon">${icon}</div>
-        <div style="flex:1">
-          <div class="e-title">${e.category} — ${e.title}</div>
-          <div class="e-desc">${e.description}${e.value?`<br><code>${e.value}</code>`:''}</div>
-          ${e.fix?`<div class="e-fix">→ ${e.fix}</div>`:''}
-        </div>
+  // Top bar with save button
+  const topBar = document.createElement('div');
+  topBar.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:8px';
+  topBar.innerHTML = '<div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace">Onpage Audit</div>';
+  const saveBtn = document.createElement('button');
+  saveBtn.className = 'save-btn';
+  saveBtn.innerHTML = '&#128190; Save Result';
+  saveBtn.onclick = (e) => {
+    e.stopPropagation();
+    const d = window._lastAuditData;
+    if (!d) { alert('No data to save'); return; }
+    const id = 'result_' + Date.now();
+    const name = 'Onpage Audit — Score ' + (d.score || 0);
+    saveResult(id, name, 'audit', d);
+    saveBtn.innerHTML = '&#10003; Saved!';
+    saveBtn.classList.add('saved-ok');
+    setTimeout(() => { saveBtn.innerHTML = '&#128190; Save Result'; saveBtn.classList.remove('saved-ok'); }, 2000);
+  };
+  topBar.appendChild(saveBtn);
+  wrap.appendChild(topBar);
+
+  // Stats
+  const stats = document.createElement('div');
+  stats.className = 'result-stats';
+  stats.innerHTML = `
+    <div class="rs-box ${scCls}"><div class="rs-n">${sc}</div><div class="rs-l">SEO Score</div></div>
+    <div class="rs-box rs-red"><div class="rs-n">${s.critical||0}</div><div class="rs-l">Critical</div></div>
+    <div class="rs-box rs-amber"><div class="rs-n">${s.warning||0}</div><div class="rs-l">Warning</div></div>
+    <div class="rs-box rs-blue"><div class="rs-n">${s.info||0}</div><div class="rs-l">Info</div></div>
+    <div class="rs-box rs-green"><div class="rs-n">${s.passed||0}</div><div class="rs-l">Passed</div></div>`;
+  wrap.appendChild(stats);
+
+  // Checks
+  checks.forEach(e => {
+    const cls = e.severity==='high'?'e-h':e.severity==='medium'?'e-m':e.severity==='low'?'e-l':'e-ok';
+    const icon = e.severity==='high'?'!':e.severity==='medium'?'~':e.severity==='low'?'i':'✓';
+    const row = document.createElement('div');
+    row.className = 'error-row ' + cls;
+    row.innerHTML = `
+      <div class="e-icon">${icon}</div>
+      <div style="flex:1">
+        <div class="e-title">${e.category} — ${e.title}</div>
+        <div class="e-desc">${e.description}${e.value ? '<br><code>' + e.value + '</code>' : ''}</div>
+        ${e.fix ? '<div class="e-fix">→ ' + e.fix + '</div>' : ''}
       </div>`;
-    }).join('')}`;
+    wrap.appendChild(row);
+  });
   return wrap;
 }
 
 function renderLinks(data) {
+  window._lastLinksData = data;
   const wrap = document.createElement('div');
-  const s = data.summary || {};
-  const links = data.links || [];
+  const incoming = data.incomingLinks || [];
+  const pillar = data.pillar || null;
 
-  const linkSaveId = 'save_' + Date.now();
-  const exportBtn = document.createElement('button');
-  exportBtn.className = 'btn btn-secondary btn-sm';
-  exportBtn.style.cssText = 'margin-bottom:8px;font-size:11px';
-  exportBtn.textContent = '↓ Export CSV';
-  exportBtn.onclick = () => exportLinksCSV(links);
+  // Save button
   const saveLinkBtn = document.createElement('button');
   saveLinkBtn.className = 'save-btn';
-  saveLinkBtn.id = linkSaveId;
-  saveLinkBtn.style.marginBottom = '8px';
-  saveLinkBtn.textContent = '💾 Save Result';
-  saveLinkBtn.onclick = (e) => handleSave(linkSaveId, 'links', e);
-  window._lastLinksData = data;
+  saveLinkBtn.style.marginBottom = '10px';
+  saveLinkBtn.innerHTML = '&#128190; Save Result';
+  saveLinkBtn.onclick = (e) => {
+    e.stopPropagation();
+    const d = window._lastLinksData;
+    if (!d) { alert('No data to save'); return; }
+    const id = 'result_' + Date.now();
+    const name = 'Internal Links — ' + (d.targetTitle || d.targetUrl || '');
+    saveResult(id, name, 'links', d);
+    saveLinkBtn.innerHTML = '&#10003; Saved!';
+    saveLinkBtn.classList.add('saved-ok');
+    setTimeout(() => { saveLinkBtn.innerHTML = '&#128190; Save Result'; saveLinkBtn.classList.remove('saved-ok'); }, 2000);
+  };
+  wrap.appendChild(saveLinkBtn);
 
-  wrap.innerHTML = `
-    <div class="result-stats">
-      <div class="rs-box"><div class="rs-n">${s.totalLinks||links.length}</div><div class="rs-l">Links</div></div>
-      <div class="rs-box rs-green"><div class="rs-n">${s.pillarsLinked||0}</div><div class="rs-l">Pillar</div></div>
-      <div class="rs-box rs-blue"><div class="rs-n">${s.clustersLinked||0}</div><div class="rs-l">Cluster</div></div>
-      <div class="rs-box rs-red"><div class="rs-n">${links.filter(l=>l.priority==='high').length}</div><div class="rs-l">High pri</div></div>
-    </div>`;
-  const linkBtnRow = document.createElement('div');
-  linkBtnRow.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px';
-  linkBtnRow.appendChild(exportBtn);
-  linkBtnRow.appendChild(saveLinkBtn);
-  wrap.appendChild(linkBtnRow);
+  // Target page info
+  const targetDiv = document.createElement('div');
+  targetDiv.style.cssText = 'background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:10px 13px;margin-bottom:12px';
+  targetDiv.innerHTML = `
+    <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Target Page</div>
+    <div style="font-size:13px;font-weight:500">${data.targetTitle || 'Target Page'}</div>
+    <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px">${data.targetUrl || ''}</div>
+    ${data.targetKeyword ? `<div style="margin-top:6px"><span class="pill p-blue">${data.targetKeyword}</span></div>` : ''}`;
+  wrap.appendChild(targetDiv);
 
-  const tbl = document.createElement('div');
-  tbl.style.overflowX = 'auto';
-  tbl.innerHTML = `<table class="link-tbl">
-    <thead><tr><th>Source</th><th>Anchor Text</th><th>Link To</th><th>Priority</th><th>Placement</th></tr></thead>
-    <tbody>${links.map(l=>{
-      const pc=l.priority==='high'?'p-red':l.priority==='medium'?'p-amber':'p-blue';
-      return `<tr>
-        <td><div style="font-weight:500;font-size:11px">${l.sourceTitle||''}</div><div style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace">${(l.sourceUrl||'').replace(/https?:\/\/[^/]+/,'')}</div></td>
-        <td><span class="anchor">${l.anchorText||''}</span></td>
-        <td><div style="font-size:11px">${l.targetTitle||''}</div><div style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace">${(l.targetUrl||'').replace(/https?:\/\/[^/]+/,'')}</div></td>
-        <td><span class="pill ${pc}">${l.priority||''}</span></td>
-        <td style="font-size:11px">${l.placement||''}</td>
-      </tr>`;
-    }).join('')}</tbody>
-  </table>`;
-  wrap.appendChild(tbl);
+  // Stats
+  const high = incoming.filter(l=>l.priority==='high').length;
+  const med = incoming.filter(l=>l.priority==='medium').length;
+  const stats = document.createElement('div');
+  stats.className = 'result-stats';
+  stats.innerHTML = `
+    <div class="rs-box"><div class="rs-n">${incoming.length + (pillar?1:0)}</div><div class="rs-l">Total Links</div></div>
+    <div class="rs-box rs-green"><div class="rs-n">${pillar?1:0}</div><div class="rs-l">Pillar</div></div>
+    <div class="rs-box rs-red"><div class="rs-n">${high}</div><div class="rs-l">High pri</div></div>
+    <div class="rs-box rs-amber"><div class="rs-n">${med}</div><div class="rs-l">Medium</div></div>`;
+  wrap.appendChild(stats);
+
+  // Pillar link card
+  if (pillar) {
+    const pillarDiv = document.createElement('div');
+    pillarDiv.style.cssText = 'border:1px solid var(--green-border);border-radius:var(--rs);overflow:hidden;margin-bottom:10px';
+    pillarDiv.innerHTML = `
+      <div style="background:var(--green-bg);padding:8px 12px;display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px">🏛</span>
+        <div style="flex:1">
+          <div style="font-size:11px;color:var(--green);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em">Pillar Page</div>
+          <div style="font-size:12.5px;font-weight:500;color:var(--text)">${pillar.title||''}</div>
+          <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace">${pillar.url||''}</div>
+        </div>
+        <span class="pill p-green">high</span>
+      </div>
+      <div style="padding:10px 12px;background:var(--surface)">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'DM Mono',monospace;letter-spacing:.06em;margin-bottom:5px">Anchor Text</div>
+        <span class="anchor">${pillar.anchorText||''}</span>
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'DM Mono',monospace;letter-spacing:.06em;margin:8px 0 4px">Placement</div>
+        <div style="font-size:12px;color:var(--text)">${pillar.placement||''}</div>
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'DM Mono',monospace;letter-spacing:.06em;margin:8px 0 4px">Why</div>
+        <div style="font-size:11.5px;color:var(--text2)">${pillar.reason||''}</div>
+      </div>`;
+    wrap.appendChild(pillarDiv);
+  }
+
+  // Export row
+  const expRow = document.createElement('div');
+  expRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px';
+  expRow.innerHTML = `<div style="font-size:11px;font-weight:500">${incoming.length} pages should link to this page</div>`;
+  const expBtn = document.createElement('button');
+  expBtn.className = 'btn btn-secondary btn-sm';
+  expBtn.textContent = '↓ Export CSV';
+  expBtn.onclick = () => exportLinksCSV(data);
+  expRow.appendChild(expBtn);
+  wrap.appendChild(expRow);
+
+  // Incoming links list
+  const linkList = document.createElement('div');
+  linkList.style.cssText = 'display:flex;flex-direction:column;gap:8px';
+  incoming.forEach(l => {
+    const card = document.createElement('div');
+    card.style.cssText = 'border:1px solid var(--border);border-radius:var(--rs);overflow:hidden';
+    const priClass = l.priority==='high'?'p-red':l.priority==='medium'?'p-amber':'p-blue';
+    card.innerHTML = `
+      <div style="background:var(--surface2);padding:8px 12px;display:flex;align-items:flex-start;gap:8px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12.5px;font-weight:500">${l.sourceTitle||''}</div>
+          <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:1px">${(l.sourceUrl||'').replace(/https?:\/\/[^/]+/,'')}</div>
+        </div>
+        <div style="display:flex;gap:5px;align-items:center;flex-shrink:0">
+          <span class="pill ${priClass}">${l.priority}</span>
+          <span class="pill p-gray">${l.placement||''}</span>
+        </div>
+      </div>
+      <div style="padding:10px 12px;background:var(--surface)">
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px">
+          <div>
+            <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'DM Mono',monospace;letter-spacing:.06em;margin-bottom:4px">Anchor Text</div>
+            <span class="anchor">${l.anchorText||''}</span>
+          </div>
+        </div>
+        ${l.suggestedSentence ? `<div style="font-size:11px;color:var(--text2);background:var(--surface2);border-radius:5px;padding:7px 10px;border:1px solid var(--border);line-height:1.5">${l.suggestedSentence.replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--blue)">$1</strong>')}</div>` : ''}
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">${l.reason||''}</div>
+      </div>`;
+    linkList.appendChild(card);
+  });
+  wrap.appendChild(linkList);
   return wrap;
 }
 
-function exportLinksCSV(links) {
-  const rows = [['Source URL','Source Title','Anchor Text','Target URL','Target Title','Priority','Placement','Reason']];
-  links.forEach(l=>rows.push([l.sourceUrl,l.sourceTitle,l.anchorText,l.targetUrl,l.targetTitle,l.priority,l.placement,l.reason]));
+function exportLinksCSV(data) {
+  const links = data.incomingLinks || data.links || [];
+  const target = data.targetUrl || '';
+  const rows = [['Source URL','Source Title','Anchor Text','Target URL','Priority','Placement','Suggested Sentence','Reason']];
+  links.forEach(l=>rows.push([l.sourceUrl,l.sourceTitle,l.anchorText,target,l.priority,l.placement,(l.suggestedSentence||'').replace(/\*\*/g,''),l.reason]));
   const csv = rows.map(r=>r.map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
@@ -996,26 +1138,6 @@ window.addEventListener('load', () => {
 });
 
 
-function handleSave(btnId, type, e) {
-  e.stopPropagation();
-  const btn = document.getElementById(btnId);
-  let data, name;
-  if (type === 'clusters') {
-    data = window._lastArtData ? { summary: window._lastClusterSummary, clusters: window._lastClusters } : null;
-    data = window._lastClusterFull || null;
-    name = 'Sitemap Clusters — ' + (data && data.summary ? data.summary.total + ' URLs' : new Date().toLocaleDateString());
-  } else if (type === 'audit') {
-    data = window._lastAuditData || null;
-    name = 'Onpage Audit — Score ' + (data ? data.score : '');
-  } else if (type === 'links') {
-    data = window._lastLinksData || null;
-    name = 'Internal Links — ' + (data && data.links ? data.links.length + ' links' : '');
-  }
-  if (!data) { alert('No data to save'); return; }
-  const id = 'result_' + Date.now();
-  saveResult(id, name, type, data);
-  if (btn) { btn.textContent = '✓ Saved!'; btn.classList.add('saved-ok'); setTimeout(()=>{btn.textContent='💾 Save Result';btn.classList.remove('saved-ok')},2000); }
-}
 
 </script>
 
